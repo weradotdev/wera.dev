@@ -1,0 +1,45 @@
+HTTrack3.49-2 launched on Thu, 19 Mar 2026 18:34:36 at https://themeht.com/template/sofeland/ltr
+(httrack https://themeht.com/template/sofeland/ltr )
+
+Information, Warnings and Errors reported for this mirror:
+note:	the hts-log.txt file, and hts-cache folder, may contain sensitive information,
+	such as username/password authentication for websites mirrored in this project
+	do not share these files/folders if you want these information to remain private
+
+18:36:36	Error: 	"Not Found" (404) at link https://themeht.com/template/sofeland/ltr/css/owl-carousel/owl.video.play.png (from https://themeht.com/template/sofeland/ltr/css/owl-carousel/owl.carousel.css)
+18:36:36	Error: 	"Not Found" (404) at link https://themeht.com/template/sofeland/ltr/images/pattern/07.png (from https://themeht.com/template/sofeland/ltr/css/style.css)
+18:36:36	Error: 	"Too Many Requests" (429) at link https://themeht.com/template/sofeland/ltr/images/banner/04.jpg (from https://themeht.com/template/sofeland/ltr/about-us-2.html)
+18:36:36	Error: 	"Too Many Requests" (429) at link https://themeht.com/template/sofeland/ltr/images/testimonial/04.jpg (from https://themeht.com/template/sofeland/ltr/about-us-2.html)
+18:36:36	Error: 	"Too Many Requests" (429) at link https://themeht.com/template/sofeland/ltr/images/blog/04.jpg (from https://themeht.com/template/sofeland/ltr/about-us-2.html)
+18:36:36	Error: 	"Too Many Requests" (429) at link https://themeht.com/template/sofeland/ltr/images/blog/05.jpg (from https://themeht.com/template/sofeland/ltr/about-us-2.html)
+18:36:36	Error: 	"Too Many Requests" (429) at link https://themeht.com/template/sofeland/ltr/images/blog/06.jpg (from https://themeht.com/template/sofeland/ltr/about-us-2.html)
+18:36:36	Error: 	"Too Many Requests" (429) at link https://themeht.com/template/sofeland/ltr/images/counter/01.png (from https://themeht.com/template/sofeland/ltr/services.html)
+18:36:36	Error: 	"Too Many Requests" (429) at link https://themeht.com/template/sofeland/ltr/images/counter/02.png (from https://themeht.com/template/sofeland/ltr/services.html)
+18:36:36	Error: 	"Too Many Requests" (429) at link https://themeht.com/template/sofeland/ltr/images/counter/03.png (from https://themeht.com/template/sofeland/ltr/services.html)
+18:36:36	Error: 	"Too Many Requests" (429) at link https://themeht.com/template/sofeland/ltr/images/counter/04.png (from https://themeht.com/template/sofeland/ltr/services.html)
+18:36:36	Error: 	"Too Many Requests" (429) at link https://themeht.com/template/sofeland/ltr/images/blog/blog-thumb/01.jpg (from https://themeht.com/template/sofeland/ltr/services.html)
+18:36:36	Error: 	"Too Many Requests" (429) at link https://themeht.com/template/sofeland/ltr/images/blog/blog-thumb/02.jpg (from https://themeht.com/template/sofeland/ltr/services.html)
+18:36:36	Error: 	"Too Many Requests" (429) at link https://themeht.com/template/sofeland/ltr/images/blog/blog-thumb/03.jpg (from https://themeht.com/template/sofeland/ltr/services.html)
+18:36:36	Error: 	"Too Many Requests" (429) at link https://themeht.com/template/sofeland/ltr/images/about/05.png (from https://themeht.com/template/sofeland/ltr/services-2.html)
+18:36:36	Error: 	"Too Many Requests" (429) at link https://themeht.com/template/sofeland/ltr/images/pattern/03.png (from https://themeht.com/template/sofeland/ltr/services-2.html)
+18:36:36	Error: 	"Too Many Requests" (429) at link https://themeht.com/template/sofeland/ltr/images/feature/06.png (from https://themeht.com/template/sofeland/ltr/team-single.html)
+18:36:36	Error: 	"Too Many Requests" (429) at link https://themeht.com/template/sofeland/ltr/images/feature/07.png (from https://themeht.com/template/sofeland/ltr/team-single.html)
+18:36:36	Error: 	"Too Many Requests" (429) at link https://themeht.com/template/sofeland/ltr/images/feature/08.png (from https://themeht.com/template/sofeland/ltr/team-single.html)
+18:36:36	Error: 	"Too Many Requests" (429) at link https://themeht.com/template/sofeland/ltr/images/feature/09.png (from https://themeht.com/template/sofeland/ltr/team-single.html)
+18:36:36	Error: 	"Too Many Requests" (429) at link https://themeht.com/template/sofeland/ltr/images/blog/large/02.jpg (from https://themeht.com/template/sofeland/ltr/blog-grid-2.html)
+18:36:36	Error: 	"Too Many Requests" (429) at link https://themeht.com/template/sofeland/ltr/images/blog/large/03.jpg (from https://themeht.com/template/sofeland/ltr/blog-grid-2.html)
+18:36:36	Error: 	"Too Many Requests" (429) at link https://themeht.com/template/sofeland/ltr/images/blog/large/01.jpg (from https://themeht.com/template/sofeland/ltr/blog-single.html)
+18:36:36	Error: 	"Too Many Requests" (429) at link https://themeht.com/template/sofeland/ltr/images/thumbnail/01.png (from https://themeht.com/template/sofeland/ltr/blog-single.html)
+18:36:36	Error: 	"Too Many Requests" (429) at link https://themeht.com/template/sofeland/ltr/images/thumbnail/02.png (from https://themeht.com/template/sofeland/ltr/blog-single.html)
+18:36:36	Error: 	"Too Many Requests" (429) at link https://themeht.com/template/sofeland/ltr/images/thumbnail/03.png (from https://themeht.com/template/sofeland/ltr/blog-single.html)
+18:36:36	Error: 	"Too Many Requests" (429) at link https://themeht.com/template/sofeland/ltr/images/feature/04.png (from https://themeht.com/template/sofeland/ltr/shortcode-feature-box.html)
+18:36:36	Error: 	"Too Many Requests" (429) at link https://themeht.com/template/sofeland/ltr/images/feature/03.png (from https://themeht.com/template/sofeland/ltr/shortcode-feature-box.html)
+18:36:36	Error: 	"Too Many Requests" (429) at link https://themeht.com/template/sofeland/ltr/images/banner/06.png (from https://themeht.com/template/sofeland/ltr/contact-2.html)
+18:36:36	Error: 	"Too Many Requests" (429) at link https://themeht.com/template/sofeland/ltr/images/logo-white.png (from https://themeht.com/template/sofeland/ltr/coming-soon.html)
+18:36:36	Error: 	"Too Many Requests" (429) at link https://themeht.com/template/sofeland/ltr/register.html (from https://themeht.com/template/sofeland/ltr/login.html)
+18:36:36	Error: 	"Too Many Requests" (429) at link https://themeht.com/template/sofeland/ltr/<path (from https://themeht.com/template/sofeland/ltr/js/snap.svg.js)
+18:36:36	Error: 	"Too Many Requests" (429) at link https://themeht.com/template/sofeland/ltr/id (from https://themeht.com/template/sofeland/ltr/js/snap.svg.js)
+18:36:36	Error: 	"Too Many Requests" (429) at link https://themeht.com/template/sofeland/ltr/php/contact.php (from https://themeht.com/template/sofeland/ltr/js/theme-script.js)
+
+HTTrack Website Copier/3.49-2 mirror complete in 2 minutes 0 seconds : 119 links scanned, 84 files written (5195284 bytes overall) [3562107 bytes received at 29684 bytes/sec], 2543121 bytes transferred using HTTP compression in 59 files, ratio 31%, 40.0 requests per connection
+(34 errors, 0 warnings, 0 messages)

@@ -8,7 +8,7 @@ new class extends Component
 };
 ?>
 
-<main class="flex min-h-screen flex-col pt-[72px]">
+<main class="flex min-h-screen flex-col pt-18">
     <section class="relative w-full">
         <div class="mx-auto container px-6">
             <div class="relative">

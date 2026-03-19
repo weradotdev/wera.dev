@@ -10,7 +10,7 @@ new class extends Component {
 <header class="fixed top-0 z-50 w-full px-3 lg:px-6 transition-all duration-300 pt-[env(safe-area-inset-top)] bg-white">
     <div class="transition-all duration-300">
         <nav class="mx-auto transition-all duration-300 max-w-[1600px] bg-transparent">
-            <div class="flex items-center justify-between h-[72px] transition-all duration-300 px-4 lg:px-20">
+            <div class="flex items-center justify-between h-18 transition-all duration-300 px-4 lg:px-20">
                 <a class="flex items-center gap-2 !normal-case" href="/" wire:navigate>
                    <img src="{{ asset('favicon.png') }}" alt="Wera logo" class="h-8 w-auto">
                     <span
