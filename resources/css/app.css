@@ -1,0 +1,103 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+:root {
+  --color-primary: #0097b2;
+  --color-primary-hover: #007f96;
+}
+
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+  }
+
+  * {
+    @apply border-gray-200 dark:border-gray-800;
+  }
+
+  :where([class*='border']) {
+    @apply rounded-lg;
+  }
+
+  html,
+  body {
+    @apply bg-white text-gray-900 antialiased;
+    font-family: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  }
+
+  a {
+    color: var(--color-primary);
+  }
+
+  a:hover {
+    color: var(--color-primary-hover);
+  }
+
+  .using-mouse * {
+    outline: none !important;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-lg border border-gray-300 p-5 transition-colors hover:bg-gray-50;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center rounded-lg border px-4 py-2 font-medium text-white;
+    border-color: var(--color-primary);
+    background-color: var(--color-primary);
+  }
+
+  .btn-primary:hover {
+    background-color: var(--color-primary-hover);
+    border-color: var(--color-primary-hover);
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center rounded-lg border px-4 py-2 font-medium hover:bg-gray-50;
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+  }
+
+  .form-field {
+    @apply flex flex-col gap-2;
+  }
+
+  .form-label {
+    @apply text-sm font-medium text-gray-800;
+  }
+
+  .form-input {
+    @apply w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder:text-gray-500 focus:outline-none;
+    caret-color: var(--color-primary);
+  }
+
+  .form-input:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 1px var(--color-primary);
+  }
+
+  .form-textarea {
+    @apply resize-y;
+  }
+}

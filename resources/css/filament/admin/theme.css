@@ -1,0 +1,88 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+@import '../../../../vendor/guava/calendar/resources/css/theme.css';
+
+@plugin "@tailwindcss/typography";
+@source '../../../../vendor/guava/filament-knowledge-base/src/**/*';
+@source '../../../../vendor/guava/filament-knowledge-base/resources/views/**/*';
+
+@source '../../../../app/Filament/Admin/**/*';
+@source '../../../../resources/views/filament/admin/**/*';
+@source '../../../../resources/views/filament/widgets/**/*.blade.php';
+@source '../../../../vendor/guava/calendar/resources/**/*';
+@source "../../../../vendor/relaticle/flowforge/resources/views/**/*.blade.php";
+
+
+@layer components {
+	.kanban-board-grid {
+		@apply grid gap-4 md:grid-cols-2 xl:grid-cols-4;
+	}
+
+	.kanban-board-column {
+		@apply rounded-xl border border-gray-200 bg-white p-3 dark:border-white/10 dark:bg-gray-900;
+	}
+
+	.kanban-board-column-dragging {
+		@apply opacity-60;
+	}
+
+	.kanban-board-drop-placeholder {
+		@apply min-h-40 rounded-xl border-2 border-dashed border-primary-400/70 bg-primary-50/40;
+	}
+
+	.kanban-board-drop-placeholder-active {
+		@apply ring-2 ring-primary-300/60;
+	}
+
+	.kanban-task-list {
+		@apply space-y-2;
+	}
+
+	.kanban-task-card {
+		@apply rounded-lg border border-gray-200 bg-white p-3 text-sm dark:border-white/10 dark:bg-gray-800;
+	}
+
+	.kanban-task-drag-handle {
+		@apply inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-gray-500 transition hover:bg-gray-100 hover:text-gray-700 active:cursor-grabbing dark:text-gray-400 dark:hover:bg-white/10 dark:hover:text-gray-200;
+	}
+
+	.kanban-board-drag-handle {
+		@apply inline-flex h-7 w-7 items-center justify-center rounded-md text-gray-500 transition hover:bg-gray-100 hover:text-gray-700 active:cursor-grabbing dark:text-gray-400 dark:hover:bg-white/10 dark:hover:text-gray-200;
+	}
+}
+
+.grabbing * {
+	@apply cursor-grabbing!;
+}
+
+.fi-topbar, .fi-ta-ctn, .fi-page-content {
+    @apply bg-gray-50 dark:bg-gray-950 shadow-none ring-0;
+}
+
+
+.fi-main-ctn {
+    @apply bg-gray-50 dark:bg-gray-950;
+}
+
+.fi-simple-main:where(.dark,.dark *) {
+	@apply bg-transparent ring-0;
+}
+
+/* .fi-ta-filters-header {
+	@apply hidden;
+}
+
+.fi-ta-filters {
+	@apply flex flex-row w-full justify-between;
+}
+
+.fi-sc {
+	@apply flex-1;
+}
+
+.fi-ta-filters-actions-ctn .fi-ac-btn-action {
+	@apply min-w-60 max-h-10;
+}
+
+.fi-ta-filters-above-content-ctn {
+	@apply border-0;
+} */

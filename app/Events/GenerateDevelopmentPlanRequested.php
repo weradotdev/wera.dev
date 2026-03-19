@@ -1,0 +1,18 @@
+<?php
+
+namespace App\Events;
+
+use App\Models\Plan;
+use App\Models\Project;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
+
+class GenerateDevelopmentPlanRequested
+{
+    use Dispatchable, SerializesModels;
+
+    public function __construct(
+        public Project $project,
+        public Plan $plan
+    ) {}
+}

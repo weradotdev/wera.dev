@@ -1,0 +1,30 @@
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Filament\Facades\Filament;
+use Filament\Support\Colors\Color;
+use Filament\Support\Facades\FilamentColor;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+class SetFilamentTenantColor
+{
+    private const string DefaultPrimary = '#0097b2';
+
+    public function handle(Request $request, Closure $next): Response
+    {
+        $tenant = Filament::getTenant();
+
+        $hex = $tenant && filled($tenant->color ?? null)
+            ? $tenant->color
+            : self::DefaultPrimary;
+
+        FilamentColor::register([
+            'primary' => Color::hex($hex),
+        ]);
+
+        return $next($request);
+    }
+}

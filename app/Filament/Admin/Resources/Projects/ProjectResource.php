@@ -1,0 +1,60 @@
+<?php
+
+namespace App\Filament\Admin\Resources\Projects;
+
+use App\Filament\Admin\Resources\Projects\Pages\CreateProject;
+use App\Filament\Admin\Resources\Projects\Pages\EditProject;
+use App\Filament\Admin\Resources\Projects\Pages\ListProjects;
+use App\Filament\Admin\Resources\Projects\Pages\ViewProject;
+use App\Filament\Admin\Resources\Projects\RelationManagers\BoardsRelationManager;
+use App\Filament\Admin\Resources\Projects\RelationManagers\TasksRelationManager;
+use App\Filament\Admin\Resources\Projects\Schemas\ProjectForm;
+use App\Filament\Admin\Resources\Projects\Schemas\ProjectInfolist;
+use App\Filament\Admin\Resources\Projects\Tables\ProjectsTable;
+use App\Models\Project;
+use BackedEnum;
+use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
+use Filament\Tables\Table;
+
+class ProjectResource extends Resource
+{
+    protected static ?string $model = Project::class;
+
+    protected static string|BackedEnum|null $navigationIcon = 'hugeicons-kanban';
+
+    protected static ?int $navigationSort = 2;
+
+    public static function form(Schema $schema): Schema
+    {
+        return ProjectForm::configure($schema);
+    }
+
+    public static function table(Table $table): Table
+    {
+        return ProjectsTable::configure($table);
+    }
+
+    public static function infolist(Schema $schema): Schema
+    {
+        return ProjectInfolist::configure($schema);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            BoardsRelationManager::class,
+            TasksRelationManager::class,
+        ];
+    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index'  => ListProjects::route('/'),
+            'create' => CreateProject::route('/create'),
+            'view'   => ViewProject::route('/{record}'),
+            'edit'   => EditProject::route('/{record}/edit'),
+        ];
+    }
+}
