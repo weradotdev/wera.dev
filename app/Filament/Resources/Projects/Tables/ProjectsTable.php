@@ -65,7 +65,7 @@ class ProjectsTable
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make()
-                    ->visible(fn(Project $record) => auth()->id() === $record->user_id),
+                    ->visible(fn(Project $record) => filament()->auth()->id() === $record->user_id),
                 CommentsAction::make()
                     ->mentionables(User::query()->orderBy('name')->get()),
                 SubscriptionAction::make()

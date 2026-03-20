@@ -32,7 +32,7 @@ class ProjectForm
                 Group::make()
                     ->schema([
                         Hidden::make('user_id')
-                            ->default(fn(): ?int => auth()->id()),
+                            ->default(fn(): ?int => filament()->auth()->id()),
                         TextInput::make('name')
                             ->required()
                             ->live(onBlur: true)
@@ -234,7 +234,7 @@ class ProjectForm
                 ->icon('hugeicons-notification-01')
                 ->schema([
                     Toggle::make('settings.notifications.notify_developer_per_task')
-                        ->label('Notify developer when assigned to a task')
+                        ->label('Notify when assigned to a task')
                         ->default($defaults['notifications']['notify_developer_per_task'])
                         ->live(),
                     CheckboxList::make('settings.notifications.channels')

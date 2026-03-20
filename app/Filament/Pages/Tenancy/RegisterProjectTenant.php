@@ -29,7 +29,7 @@ class RegisterProjectTenant extends RegisterTenant
             ->components([
                 Select::make('workspace_id')
                     ->label('Workspace')
-                    ->options(fn (): array => auth()->user()?->workspaces()->pluck('name', 'workspaces.id')->all() ?? [])
+                    ->options(fn (): array => filament()->auth()->user()?->workspaces()->pluck('name', 'workspaces.id')->all() ?? [])
                     ->required()
                     ->searchable(),
                 TextInput::make('name')

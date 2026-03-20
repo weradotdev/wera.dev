@@ -115,7 +115,7 @@ class TicketsTable
             $task = Task::query()->create([
                 'workspace_id'     => $record->workspace_id,
                 'project_id'       => $record->project_id,
-                'user_id'          => auth()->id(),
+                'user_id'          => filament()->auth()->id(),
                 'board_id' => $board?->id,
                 'ticket_id'        => $record->id,
                 'title'            => $record->title,

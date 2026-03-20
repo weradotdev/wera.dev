@@ -22,7 +22,7 @@ class ViewProject extends ViewRecord
             SubscriptionAction::make()
                 ->hiddenLabel(),
             EditAction::make()
-                ->visible(fn () => auth()->id() === $this->record->user_id),
+                ->visible(fn () => filament()->auth()->id() === $this->record->user_id),
         ];
     }
 
@@ -38,5 +38,10 @@ class ViewProject extends ViewRecord
     public function getTitle(): string|\Illuminate\Contracts\Support\Htmlable
     {
         return $this->record->name;
+    }
+
+    public function getHeading(): string|\Illuminate\Contracts\Support\Htmlable|null
+    {
+        return "{$this->record->name} ({$this->record->workspace->name})";
     }
 }

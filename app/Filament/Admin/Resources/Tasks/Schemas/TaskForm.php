@@ -37,7 +37,7 @@ class TaskForm
                         Wizard\Step::make('Task details')
                             ->schema([
                                 Hidden::make('user_id')
-                                    ->default(fn (): ?int => auth()->id()),
+                                    ->default(fn (): ?int => filament()->auth()->id()),
                                 Select::make('project_id')
                                     ->relationship('project', 'name', modifyQueryUsing: fn (Builder $query) => $query->whereBelongsTo(Filament::getTenant()))
                                     ->live(onBlur: true)

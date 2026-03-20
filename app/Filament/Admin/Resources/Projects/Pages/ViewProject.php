@@ -75,7 +75,7 @@ class ViewProject extends ViewRecord
 
                         $plan = Plan::query()->create([
                             'workspace_id'  => $project->workspace_id,
-                            'user_id'       => auth()->id(),
+                            'user_id'       => filament()->auth()->id(),
                             'planable_type' => Project::class,
                             'planable_id'   => $project->getKey(),
                             'name'          => "{$project->name} Development Plan",
@@ -219,6 +219,11 @@ class ViewProject extends ViewRecord
     public function getTitle(): string|\Illuminate\Contracts\Support\Htmlable
     {
         return $this->record->name;
+    }
+
+    public function getHeading(): string|\Illuminate\Contracts\Support\Htmlable|null
+    {
+        return "{$this->record->name} ({$this->record->workspace->name})";
     }
 
     public function getSubheading(): string|\Illuminate\Contracts\Support\Htmlable|null

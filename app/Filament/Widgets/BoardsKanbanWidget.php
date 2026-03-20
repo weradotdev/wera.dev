@@ -337,7 +337,7 @@ class BoardsKanbanWidget extends Widget implements HasForms
         Task::query()->create([
             'workspace_id' => $project->workspace_id,
             'project_id'   => $project->id,
-            'user_id'      => auth()->id(),
+            'user_id'      => filament()->auth()->id(),
             'board_id'     => $this->addingCardToBoardId,
             'title'        => trim($this->newCardTitle),
             'description'  => null,

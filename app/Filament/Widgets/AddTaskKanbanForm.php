@@ -192,7 +192,7 @@ class AddTaskKanbanForm extends Component implements HasActions, HasForms
         $task = Task::query()->create([
             'workspace_id' => $project->workspace_id,
             'project_id'   => $project->id,
-            'user_id'      => auth()->id(),
+            'user_id'      => filament()->auth()->id(),
             'board_id'     => $this->boardId,
             'title'        => trim($data['title']),
             'description'  => filled($data['description'] ?? null) ? $data['description'] : null,
@@ -224,7 +224,7 @@ class AddTaskKanbanForm extends Component implements HasActions, HasForms
         } else {
             TaskUser::query()->create([
                 'task_id' => $task->id,
-                'user_id' => auth()->id(),
+                'user_id' => filament()->auth()->id(),
                 'role'    => 'developer',
             ]);
         }

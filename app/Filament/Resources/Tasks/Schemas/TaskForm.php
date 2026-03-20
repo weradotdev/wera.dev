@@ -19,7 +19,7 @@ class TaskForm
         return $schema
             ->components([
                 Hidden::make('user_id')
-                    ->default(fn (): ?int => auth()->id()),
+                    ->default(fn (): ?int => filament()->auth()->id()),
                 TextInput::make('title')
                     ->required()
                     ->maxLength(255)
