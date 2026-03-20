@@ -28,7 +28,7 @@ class DatabaseSeeder extends Seeder
         );
 
         $admin = User::query()->firstOrCreate([
-            'email' => 'admin@wera.com',
+            'email' => 'admin@wera.dev',
         ], [
             'first_name' => 'Admin',
             'last_name'  => 'User',

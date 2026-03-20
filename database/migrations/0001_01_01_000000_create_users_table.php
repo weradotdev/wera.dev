@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -27,7 +26,9 @@ return new class extends Migration
             $table->string('gender')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('phone_verified_at')->nullable();
-            $table->string('password');
+            $table->string('password')->nullable();
+            $table->string('otp', 6)->nullable();
+            $table->string('pin')->nullable();
             $table->rememberToken();
             $table->boolean('active')->default(true)->comment('Whether the user is active or not');
             $table->date('dob')->nullable();

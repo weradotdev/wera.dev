@@ -6,9 +6,9 @@ use App\Traits\BelongsToWorkspace;
 use Filament\Models\Contracts\HasAvatar;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -37,11 +37,15 @@ class Project extends Model implements Commentable, HasAvatar, HasMedia
         'workspace_id',
         'user_id',
         'name',
+        'display_name',
         'slug',
         'icon',
+        'icon_dark',
         'description',
         'image',
+        'image_dark',
         'banner',
+        'banner_dark',
         'color',
         'status',
         'settings',
@@ -49,11 +53,16 @@ class Project extends Model implements Commentable, HasAvatar, HasMedia
         'end_date',
     ];
 
-    protected $appends = ['icon_url', 'image_url', 'banner_url', 'last_comment'];
+    protected $appends = ['icon_url', 'icon_dark_url', 'image_url', 'image_dark_url', 'banner_url', 'banner_dark_url', 'last_comment'];
 
     public function iconUrl(): Attribute
     {
         return Attribute::make(get: fn() => $this->icon ? asset("storage/$this->icon") : null);
+    }
+
+    public function iconDarkUrl(): Attribute
+    {
+        return Attribute::make(get: fn() => $this->icon_dark ? asset("storage/$this->icon_dark") : null);
     }
 
     public function imageUrl(): Attribute
@@ -61,9 +70,19 @@ class Project extends Model implements Commentable, HasAvatar, HasMedia
         return Attribute::make(get: fn() => $this->image ? asset("storage/$this->image") : null);
     }
 
+    public function imageDarkUrl(): Attribute
+    {
+        return Attribute::make(get: fn() => $this->image_dark ? asset("storage/$this->image_dark") : null);
+    }
+
     public function bannerUrl(): Attribute
     {
         return Attribute::make(get: fn() => $this->banner ? asset("storage/$this->banner") : null);
+    }
+
+    public function bannerDarkUrl(): Attribute
+    {
+        return Attribute::make(get: fn() => $this->banner_dark ? asset("storage/$this->banner_dark") : null);
     }
 
     /**

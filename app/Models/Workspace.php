@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Filament\Models\Contracts\HasAvatar;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -19,12 +20,37 @@ class Workspace extends Model implements HasAvatar
      */
     protected $fillable = [
         'name',
+        'display_name',
         'slug',
         'icon',
+        'icon_dark',
         'description',
         'image',
+        'image_dark',
         'color',
     ];
+
+    protected $appends = ['icon_url', 'icon_dark_url', 'image_url', 'image_dark_url'];
+
+    public function iconUrl(): Attribute
+    {
+        return Attribute::make(get: fn () => $this->icon ? asset("storage/$this->icon") : null);
+    }
+
+    public function iconDarkUrl(): Attribute
+    {
+        return Attribute::make(get: fn () => $this->icon_dark ? asset("storage/$this->icon_dark") : null);
+    }
+
+    public function imageUrl(): Attribute
+    {
+        return Attribute::make(get: fn () => $this->image ? asset("storage/$this->image") : null);
+    }
+
+    public function imageDarkUrl(): Attribute
+    {
+        return Attribute::make(get: fn () => $this->image_dark ? asset("storage/$this->image_dark") : null);
+    }
 
     public function projects(): HasMany
     {

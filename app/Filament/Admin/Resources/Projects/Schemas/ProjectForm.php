@@ -17,9 +17,11 @@ use Filament\Forms\Components\Toggle;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class ProjectForm
 {
@@ -33,6 +35,14 @@ class ProjectForm
                             ->default(fn(): ?int => auth()->id()),
                         TextInput::make('name')
                             ->required()
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(function (?string $state, Set $set): void {
+                                $set('slug', Str::slug($state ?? ''));
+                                $set('display_name', $state ?? '');
+                            })
+                            ->maxLength(255)
+                            ->columnSpan(2),
+                        TextInput::make('display_name')
                             ->maxLength(255)
                             ->columnSpan(2),
                         ColorPicker::make('color')
@@ -71,17 +81,35 @@ class ProjectForm
                             ->disk('public')
                             ->directory('icons/projects')
                             ->imageEditor(),
+                        FileUpload::make('icon_dark')
+                            ->label('Project icon (dark)')
+                            ->image()
+                            ->disk('public')
+                            ->directory('icons/projects/dark')
+                            ->imageEditor(),
                         FileUpload::make('image')
                             ->label('Logo Image')
                             ->image()
                             ->disk('public')
                             ->directory('avatars/projects')
                             ->imageEditor(),
+                        FileUpload::make('image_dark')
+                            ->label('Logo image (dark)')
+                            ->image()
+                            ->disk('public')
+                            ->directory('avatars/projects/dark')
+                            ->imageEditor(),
                         FileUpload::make('banner')
                             ->label('Banner image')
                             ->image()
                             ->disk('public')
                             ->directory('banners/projects')
+                            ->imageEditor(),
+                        FileUpload::make('banner_dark')
+                            ->label('Banner image (dark)')
+                            ->image()
+                            ->disk('public')
+                            ->directory('banners/projects/dark')
                             ->imageEditor(),
                         SpatieMediaLibraryFileUpload::make('screenshots')
                             ->label('Screenshots / Attachments')

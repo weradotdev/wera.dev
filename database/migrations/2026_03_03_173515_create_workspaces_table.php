@@ -15,9 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('slug')->unique();
+            $table->string('display_name')->nullable();
             $table->string('icon')->nullable();
+            $table->string('icon_dark')->nullable();
             $table->text('description')->nullable();
             $table->string('image')->nullable();
+            $table->string('image_dark')->nullable();
             $table->string('color')->nullable();
             $table->timestamps();
         });
