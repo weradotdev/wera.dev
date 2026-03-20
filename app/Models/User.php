@@ -3,13 +3,13 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Observers\UserObserver;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasAvatar;
 use Filament\Models\Contracts\HasDefaultTenant;
 use Filament\Models\Contracts\HasName;
 use Filament\Models\Contracts\HasTenants;
 use Filament\Panel;
-use App\Observers\UserObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -17,16 +17,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Notifications\Notification;
 use Illuminate\Support\Collection;
 use Kirschbaum\Commentions\Contracts\Commenter;
+use Laravel\Sanctum\HasApiTokens;
 
 #[ObservedBy(UserObserver::class)]
 class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar, HasDefaultTenant, HasName, HasTenants
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
+    /** @use HasFactory<UserFactory> */
     use HasApiTokens, HasFactory, Notifiable;
 
     /**
@@ -109,6 +109,18 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
     public function projectUsers(): HasMany
     {
         return $this->hasMany(ProjectUser::class);
+    }
+
+    public function hostedMeetings(): HasMany
+    {
+        return $this->hasMany(Meeting::class, 'host_user_id');
+    }
+
+    public function meetings(): BelongsToMany
+    {
+        return $this->belongsToMany(Meeting::class, 'meeting_users')
+            ->withPivot(['invited_by_user_id', 'is_host', 'joined_at', 'left_at'])
+            ->withTimestamps();
     }
 
     public function workspaces(): BelongsToMany

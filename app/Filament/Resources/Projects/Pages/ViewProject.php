@@ -5,8 +5,10 @@ namespace App\Filament\Resources\Projects\Pages;
 use App\Filament\Resources\Projects\ProjectResource;
 use App\Filament\Widgets\BoardsKanbanWidget;
 use App\Models\User;
+use Filament\Actions\Action;
 use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
+use Illuminate\Contracts\Support\Htmlable;
 use Kirschbaum\Commentions\Filament\Actions\CommentsAction;
 use Kirschbaum\Commentions\Filament\Actions\SubscriptionAction;
 
@@ -17,6 +19,10 @@ class ViewProject extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
+            Action::make('do')
+                ->label('Do')
+                ->icon('heroicon-m-video-camera')
+                ->url(fn (): string => ProjectResource::getUrl('do', ['record' => $this->record])),
             CommentsAction::make()
                 ->mentionables(User::query()->orderBy('name')->get()),
             SubscriptionAction::make()
@@ -35,12 +41,12 @@ class ViewProject extends ViewRecord
         ];
     }
 
-    public function getTitle(): string|\Illuminate\Contracts\Support\Htmlable
+    public function getTitle(): string|Htmlable
     {
         return $this->record->name;
     }
 
-    public function getHeading(): string|\Illuminate\Contracts\Support\Htmlable|null
+    public function getHeading(): string|Htmlable|null
     {
         return "{$this->record->name} ({$this->record->workspace->name})";
     }

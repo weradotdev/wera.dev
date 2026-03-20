@@ -9,4 +9,6 @@ echo "Storage directories:"
 ls -la /var/www/html/storage
 ls -la /var/www/html/bootstrap/cache
 
+php artisan optimize:clear
+
 echo "Done."

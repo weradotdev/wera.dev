@@ -2,9 +2,10 @@
 
 namespace App\Filament\Admin\Resources\Projects\Pages;
 
+use App\Events\GenerateDevelopmentPlanRequested;
 use App\Filament\Admin\Resources\Projects\ProjectResource;
 use App\Filament\Widgets\BoardsKanbanWidget;
-use App\Events\GenerateDevelopmentPlanRequested;
+use App\Models\Meeting;
 use App\Models\Plan;
 use App\Models\PlanRevision;
 use App\Models\Project;
@@ -17,12 +18,12 @@ use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Resources\Pages\ViewRecord;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Phiki\Grammar\Grammar;
 
 class ViewProject extends ViewRecord
 {
@@ -50,7 +51,7 @@ class ViewProject extends ViewRecord
                             ->placeholder('Project context and scope for the implementation plan')
                             ->helperText('Provide a description of the project and its scope for the implementation plan. Add any relevant information that will help the AI generate a comprehensive plan.')
                             ->hint('Min. 500 chars')
-                            ->default(fn(): string => (string) $project->description)
+                            ->default(fn (): string => (string) $project->description)
                             ->required()
                             ->rows(6)
                             ->minLength(500)
@@ -60,7 +61,7 @@ class ViewProject extends ViewRecord
                             ->helperText('Optional: select users to include in the plan context')
                             ->options(
                                 User::query()
-                                    ->whereHas('workspaces', fn(Builder $q): Builder => $q->where('workspaces.id', $project->workspace_id))
+                                    ->whereHas('workspaces', fn (Builder $q): Builder => $q->where('workspaces.id', $project->workspace_id))
                                     ->orderBy('name')
                                     ->pluck('name', 'id')
                             )
@@ -84,7 +85,7 @@ class ViewProject extends ViewRecord
 
                         PlanRevision::query()->create([
                             'plan_id'     => $plan->id,
-                            'name'        => $project->name . ' — Initial',
+                            'name'        => $project->name.' — Initial',
                             'description' => $data['description'],
                         ]);
 
@@ -101,7 +102,7 @@ class ViewProject extends ViewRecord
                         $project = $this->record->load([
                             'workspace',
                             'comments.author',
-                            'tasks' => fn($query) => $query
+                            'tasks' => fn ($query) => $query
                                 ->with(['board', 'assignedUsers', 'comments.author'])
                                 ->orderBy('end_at')
                                 ->orderBy('id'),
@@ -120,7 +121,7 @@ class ViewProject extends ViewRecord
                         $filename = sprintf('project-executive-report-%s-%s.pdf', $project->id, now()->format('Ymd-His'));
 
                         return response()->streamDownload(
-                            fn() => print ($pdf->output()),
+                            fn () => print ($pdf->output()),
                             $filename,
                         );
                     }),
@@ -133,7 +134,7 @@ class ViewProject extends ViewRecord
                         $project = $this->record->load([
                             'workspace',
                             'comments.author',
-                            'tasks' => fn($query) => $query
+                            'tasks' => fn ($query) => $query
                                 ->with(['board', 'assignedUsers', 'comments.author'])
                                 ->orderBy('start_at')
                                 ->orderBy('id'),
@@ -152,7 +153,7 @@ class ViewProject extends ViewRecord
                         $filename = sprintf('project-status-report-%s-%s.pdf', $project->id, now()->format('Ymd-His'));
 
                         return response()->streamDownload(
-                            fn() => print ($pdf->output()),
+                            fn () => print ($pdf->output()),
                             $filename,
                         );
                     }),
@@ -168,10 +169,10 @@ class ViewProject extends ViewRecord
                         $workspace = Workspace::query()
                             ->whereKey($project->workspace_id)
                             ->with([
-                                'projects' => fn($query) => $query
+                                'projects' => fn ($query) => $query
                                     ->with([
                                         'comments.author',
-                                        'tasks' => fn($taskQuery) => $taskQuery
+                                        'tasks' => fn ($taskQuery) => $taskQuery
                                             ->with(['board', 'assignedUsers', 'comments.author'])
                                             ->orderBy('start_at')
                                             ->orderBy('id'),
@@ -193,12 +194,63 @@ class ViewProject extends ViewRecord
                         $filename = sprintf('workspace-portfolio-report-%s-%s.pdf', $workspace->id, now()->format('Ymd-His'));
 
                         return response()->streamDownload(
-                            fn() => print ($pdf->output()),
+                            fn () => print ($pdf->output()),
                             $filename,
                         );
                     }),
+                Action::make('startMeeting')
+                    ->label('Start Meeting')
+                    ->icon('heroicon-m-video-camera')
+                    ->color('primary')
+                    ->form([
+                        Select::make('attendees')
+                            ->label('Invite attendees')
+                            ->multiple()
+                            ->searchable()
+                            ->options(
+                                $project->users()
+                                    ->where('users.id', '!=', filament()->auth()->id())
+                                    ->orderBy('first_name')
+                                    ->get(['users.id', 'first_name', 'last_name', 'email'])
+                                    ->mapWithKeys(fn (User $user): array => [
+                                        $user->id => trim($user->first_name.' '.$user->last_name).' ('.$user->email.')',
+                                    ])
+                                    ->all()
+                            ),
+                    ])
+                    ->action(function (array $data) use ($project): void {
+                        $meeting = Meeting::query()->create([
+                            'project_id'   => $project->id,
+                            'host_user_id' => filament()->auth()->id(),
+                            'title'        => $project->name.' meeting',
+                            'status'       => 'live',
+                            'started_at'   => now(),
+                        ]);
+
+                        $meeting->meetingUsers()->create([
+                            'user_id'            => filament()->auth()->id(),
+                            'invited_by_user_id' => filament()->auth()->id(),
+                            'is_host'            => true,
+                            'joined_at'          => now(),
+                        ]);
+
+                        foreach (($data['attendees'] ?? []) as $attendeeId) {
+                            $meeting->meetingUsers()->firstOrCreate(
+                                ['user_id' => (int) $attendeeId],
+                                [
+                                    'invited_by_user_id' => filament()->auth()->id(),
+                                    'is_host'            => false,
+                                ]
+                            );
+                        }
+
+                        $this->redirect(ProjectResource::getUrl('do', [
+                            'record'  => $project,
+                            'meeting' => $meeting->getKey(),
+                        ]), navigate: true);
+                    }),
             ])
-            ->button()
+                ->button()
                 ->icon('heroicon-o-ellipsis-vertical')
                 ->label('Actions')
                 ->color('primary'),
@@ -216,17 +268,17 @@ class ViewProject extends ViewRecord
         ];
     }
 
-    public function getTitle(): string|\Illuminate\Contracts\Support\Htmlable
+    public function getTitle(): string|Htmlable
     {
         return $this->record->name;
     }
 
-    public function getHeading(): string|\Illuminate\Contracts\Support\Htmlable|null
+    public function getHeading(): string|Htmlable|null
     {
         return "{$this->record->name} ({$this->record->workspace->name})";
     }
 
-    public function getSubheading(): string|\Illuminate\Contracts\Support\Htmlable|null
+    public function getSubheading(): string|Htmlable|null
     {
         return $this->record->description ? Str::limit($this->record->description, 150) : null;
     }
@@ -268,7 +320,7 @@ class ViewProject extends ViewRecord
         }
 
         $statusSummary = collect($categorizedTasks)
-            ->map(fn(Collection $bucket): int => $bucket->count())
+            ->map(fn (Collection $bucket): int => $bucket->count())
             ->all();
 
         return [
@@ -297,7 +349,7 @@ class ViewProject extends ViewRecord
      */
     private function buildPortfolioReportData(Workspace $workspace): array
     {
-        $projects     = $workspace->projects;
+        $projects = $workspace->projects;
         $statusTotals = [
             'pending'   => 0,
             'ongoing'   => 0,
@@ -307,7 +359,7 @@ class ViewProject extends ViewRecord
         ];
 
         $overdueTasks = collect();
-        $riskTasks    = collect();
+        $riskTasks = collect();
 
         $projectRows = $projects->map(function (Project $project) use (&$statusTotals, &$overdueTasks, &$riskTasks): array {
             $tasks = $project->tasks;
@@ -327,8 +379,8 @@ class ViewProject extends ViewRecord
                 $statusTotals[$statusKey]++;
 
                 $isCompleted = 'completed' === $statusKey;
-                $isOverdue   = !$isCompleted && $task->end_at && $task->end_at->isPast();
-                $isRisk      = !$isCompleted && ('high' === Str::lower((string) $task->priority) || $isOverdue);
+                $isOverdue = ! $isCompleted && $task->end_at && $task->end_at->isPast();
+                $isRisk = ! $isCompleted && ('high' === Str::lower((string) $task->priority) || $isOverdue);
 
                 if ($isOverdue) {
                     $overdueTasks->push([
@@ -391,33 +443,33 @@ class ViewProject extends ViewRecord
             $statusTotals[$this->resolveStatusKey($boardName)]++;
         }
 
-        $totalTasks     = max($tasks->count(), 1);
+        $totalTasks = max($tasks->count(), 1);
         $completionRate = round((($statusTotals['completed'] ?? 0) / $totalTasks) * 100, 1);
 
         $overdueTasks = $tasks
             ->filter(function ($task): bool {
-                $boardName   = $task->board?->name ?? 'Uncategorized';
+                $boardName = $task->board?->name ?? 'Uncategorized';
                 $isCompleted = 'completed' === $this->resolveStatusKey($boardName);
 
-                return !$isCompleted && $task->end_at && $task->end_at->isPast();
+                return ! $isCompleted && $task->end_at && $task->end_at->isPast();
             })
             ->values();
 
         $highRiskTasks = $tasks
             ->filter(function ($task): bool {
-                $boardName   = $task->board?->name ?? 'Uncategorized';
+                $boardName = $task->board?->name ?? 'Uncategorized';
                 $isCompleted = 'completed' === $this->resolveStatusKey($boardName);
 
-                return !$isCompleted && ('high' === Str::lower((string) $task->priority));
+                return ! $isCompleted && ('high' === Str::lower((string) $task->priority));
             })
             ->values();
 
         $upcomingMilestones = $tasks
             ->filter(function ($task): bool {
-                $boardName   = $task->board?->name ?? 'Uncategorized';
+                $boardName = $task->board?->name ?? 'Uncategorized';
                 $isCompleted = 'completed' === $this->resolveStatusKey($boardName);
 
-                return !$isCompleted && $task->end_at && $task->end_at->isFuture();
+                return ! $isCompleted && $task->end_at && $task->end_at->isFuture();
             })
             ->sortBy('end_at')
             ->take(5)
@@ -439,7 +491,7 @@ class ViewProject extends ViewRecord
      */
     private function resolveLatestComment(Model $record): ?array
     {
-        if (!method_exists($record, 'comments')) {
+        if (! method_exists($record, 'comments')) {
             return null;
         }
 
@@ -447,7 +499,7 @@ class ViewProject extends ViewRecord
             ->sortByDesc('created_at')
             ->first();
 
-        if (!$lastComment) {
+        if (! $lastComment) {
             return null;
         }
 
@@ -460,11 +512,11 @@ class ViewProject extends ViewRecord
 
     private function resolveLogoDataUri(?string $path): ?string
     {
-        if (blank($path) || !Storage::disk('public')->exists($path)) {
+        if (blank($path) || ! Storage::disk('public')->exists($path)) {
             return null;
         }
 
-        $absolutePath  = Storage::disk('public')->path($path);
+        $absolutePath = Storage::disk('public')->path($path);
         $imageContents = @file_get_contents($absolutePath);
 
         if (false === $imageContents) {
@@ -473,6 +525,6 @@ class ViewProject extends ViewRecord
 
         $mimeType = mime_content_type($absolutePath) ?: 'image/png';
 
-        return 'data:' . $mimeType . ';base64,' . base64_encode($imageContents);
+        return 'data:'.$mimeType.';base64,'.base64_encode($imageContents);
     }
 }

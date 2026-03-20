@@ -6,10 +6,10 @@ use App\Traits\BelongsToWorkspace;
 use Filament\Models\Contracts\HasAvatar;
 use Filament\Models\Contracts\HasName;
 use Illuminate\Database\Eloquent\Attributes\Scope;
-use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -22,9 +22,9 @@ use Kirschbaum\Commentions\HasComments;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Project extends Model implements Commentable, HasAvatar, HasName, HasMedia
+class Project extends Model implements Commentable, HasAvatar, HasMedia, HasName
 {
-    /** @use HasFactory<\Database\Factories\ProjectFactory> */
+    /** @use HasFactory<ProjectFactory> */
     use BelongsToWorkspace;
 
     use HasComments;
@@ -58,38 +58,36 @@ class Project extends Model implements Commentable, HasAvatar, HasName, HasMedia
 
     public function iconUrl(): Attribute
     {
-        return Attribute::make(get: fn() => $this->icon ? asset("storage/$this->icon") : null);
+        return Attribute::make(get: fn () => $this->icon ? asset("storage/$this->icon") : null);
     }
 
     public function iconDarkUrl(): Attribute
     {
-        return Attribute::make(get: fn() => $this->icon_dark ? asset("storage/$this->icon_dark") : null);
+        return Attribute::make(get: fn () => $this->icon_dark ? asset("storage/$this->icon_dark") : null);
     }
 
     public function imageUrl(): Attribute
     {
-        return Attribute::make(get: fn() => $this->image ? asset("storage/$this->image") : null);
+        return Attribute::make(get: fn () => $this->image ? asset("storage/$this->image") : null);
     }
 
     public function imageDarkUrl(): Attribute
     {
-        return Attribute::make(get: fn() => $this->image_dark ? asset("storage/$this->image_dark") : null);
+        return Attribute::make(get: fn () => $this->image_dark ? asset("storage/$this->image_dark") : null);
     }
 
     public function bannerUrl(): Attribute
     {
-        return Attribute::make(get: fn() => $this->banner ? asset("storage/$this->banner") : null);
+        return Attribute::make(get: fn () => $this->banner ? asset("storage/$this->banner") : null);
     }
 
     public function bannerDarkUrl(): Attribute
     {
-        return Attribute::make(get: fn() => $this->banner_dark ? asset("storage/$this->banner_dark") : null);
+        return Attribute::make(get: fn () => $this->banner_dark ? asset("storage/$this->banner_dark") : null);
     }
 
     /**
      * Get the route key for the model.
-     *
-     * @return string
      */
     public function getRouteKeyName(): string
     {
@@ -106,7 +104,7 @@ class Project extends Model implements Commentable, HasAvatar, HasName, HasMedia
     public function ensureDefaultBoards(): void
     {
         $defaultBoardNames = ['Pending', 'Ongoing', 'Review', 'Completed'];
-        $colors            = ['#ef4444', '#3b82f6', '#eab308', '#22c55e'];
+        $colors = ['#ef4444', '#3b82f6', '#eab308', '#22c55e'];
 
         foreach ($defaultBoardNames as $position => $name) {
             $this->boards()->firstOrCreate(
@@ -147,8 +145,6 @@ class Project extends Model implements Commentable, HasAvatar, HasName, HasMedia
         ];
     }
 
-
-
     /**
      * Default project settings structure for integrations and notifications.
      *
@@ -157,7 +153,7 @@ class Project extends Model implements Commentable, HasAvatar, HasName, HasMedia
     public static function defaultSettings(): array
     {
         return [
-            'github'        => [
+            'github' => [
                 'connected'                => false,
                 'repo_url'                 => '',
                 'create_issues_with_tasks' => false,
@@ -166,17 +162,17 @@ class Project extends Model implements Commentable, HasAvatar, HasName, HasMedia
                 'notify_developer_per_task' => false,
                 'channels'                  => ['whatsapp'],
             ],
-            'slack'         => [
+            'slack' => [
                 'connected'   => false,
                 'webhook_url' => '',
                 'channel'     => '',
             ],
-            'telegram'      => [
+            'telegram' => [
                 'connected' => false,
                 'bot_token' => '',
                 'chat_id'   => '',
             ],
-            'whatsapp'      => [
+            'whatsapp' => [
                 'connected'  => false,
                 'session_id' => '',
                 'has_group'  => false,
@@ -223,6 +219,11 @@ class Project extends Model implements Commentable, HasAvatar, HasName, HasMedia
         return $this->hasMany(Ticket::class);
     }
 
+    public function meetings(): HasMany
+    {
+        return $this->hasMany(Meeting::class);
+    }
+
     public function projectUsers(): HasMany
     {
         return $this->hasMany(ProjectUser::class);
@@ -258,7 +259,7 @@ class Project extends Model implements Commentable, HasAvatar, HasName, HasMedia
     {
         $userId ??= Auth::id();
 
-        if ($userId === null) {
+        if (null === $userId) {
             return;
         }
 

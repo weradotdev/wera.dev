@@ -3,6 +3,7 @@
 namespace App\Filament\Admin\Resources\Projects;
 
 use App\Filament\Admin\Resources\Projects\Pages\CreateProject;
+use App\Filament\Admin\Resources\Projects\Pages\DoProject;
 use App\Filament\Admin\Resources\Projects\Pages\EditProject;
 use App\Filament\Admin\Resources\Projects\Pages\ListProjects;
 use App\Filament\Admin\Resources\Projects\Pages\ViewProject;
@@ -54,6 +55,7 @@ class ProjectResource extends Resource
             'index'  => ListProjects::route('/'),
             'create' => CreateProject::route('/create'),
             'view'   => ViewProject::route('/{record}'),
+            'do'     => DoProject::route('/{record}/do/{meeting?}'),
             'edit'   => EditProject::route('/{record}/edit'),
         ];
     }

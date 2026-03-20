@@ -1,0 +1,35 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('meeting_users', function (Blueprint $table) {
+            $table->id();
+            $table->foreignUlid('meeting_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('invited_by_user_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->boolean('is_host')->default(false);
+            $table->timestamp('joined_at')->nullable();
+            $table->timestamp('left_at')->nullable();
+            $table->timestamps();
+
+            $table->unique(['user_id', 'meeting_id']);
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('meeting_users');
+    }
+};
