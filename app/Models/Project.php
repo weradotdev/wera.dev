@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\BelongsToWorkspace;
 use Filament\Models\Contracts\HasAvatar;
+use Filament\Models\Contracts\HasName;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
@@ -21,7 +22,7 @@ use Kirschbaum\Commentions\HasComments;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Project extends Model implements Commentable, HasAvatar, HasMedia
+class Project extends Model implements Commentable, HasAvatar, HasName, HasMedia
 {
     /** @use HasFactory<\Database\Factories\ProjectFactory> */
     use BelongsToWorkspace;
@@ -127,6 +128,11 @@ class Project extends Model implements Commentable, HasAvatar, HasMedia
         }
 
         return Storage::disk('public')->url($this->icon);
+    }
+
+    public function getFilamentName(): string
+    {
+        return $this->display_name ?? $this->name;
     }
 
     /**

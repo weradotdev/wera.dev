@@ -92,4 +92,9 @@ class Workspace extends Model implements HasAvatar
 
         return Storage::disk('public')->url($this->icon);
     }
+
+    public function getFilamentName(): string
+    {
+        return $this->display_name ?? $this->name;
+    }
 }
