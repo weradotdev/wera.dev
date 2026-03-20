@@ -3,12 +3,15 @@
 namespace App\Filament\Resources\Projects\Pages;
 
 use App\Filament\Resources\Projects\ProjectResource;
+use App\Filament\Resources\Projects\Resources\Meetings\MeetingResource;
 use App\Filament\Widgets\BoardsKanbanWidget;
 use App\Models\Meeting;
 use App\Models\User;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Contracts\View\View;
 use Kirschbaum\Commentions\Filament\Actions\CommentsAction;
@@ -22,10 +25,21 @@ class EditProject extends EditRecord
     {
         return [
             Action::make('startMeeting')
-                ->label('Start Meeting')
+                ->label('Start / Schedule Meeting')
                 ->icon('heroicon-m-video-camera')
                 ->visible(fn () => filament()->auth()->id() === $this->record->user_id)
                 ->form([
+                    TextInput::make('title')
+                        ->label('Meeting title')
+                        ->required()
+                        ->default(fn () => $this->record->name . ' meeting')
+                        ->maxLength(255),
+                    DateTimePicker::make('started_at')
+                        ->label('Start at')
+                        ->helperText('Leave blank to start immediately'),
+                    DateTimePicker::make('ended_at')
+                        ->label('End at')
+                        ->after('started_at'),
                     Select::make('attendees')
                         ->label('Invite attendees')
                         ->multiple()
@@ -36,7 +50,7 @@ class EditProject extends EditRecord
                                 ->orderBy('first_name')
                                 ->get(['users.id', 'first_name', 'last_name', 'email'])
                                 ->mapWithKeys(fn (User $user): array => [
-                                    $user->id => trim($user->first_name.' '.$user->last_name).' ('.$user->email.')',
+                                    $user->id => trim($user->first_name . ' ' . $user->last_name) . ' (' . $user->email . ')',
                                 ])
                                 ->all()
                         ),
@@ -45,9 +59,9 @@ class EditProject extends EditRecord
                     $meeting = Meeting::query()->create([
                         'project_id'   => $this->record->id,
                         'host_user_id' => filament()->auth()->id(),
-                        'title'        => $this->record->name.' meeting',
-                        'status'       => 'live',
-                        'started_at'   => now(),
+                        'title'        => $data['title'],
+                        'start_at'     => $data['start_at'] ?? null,
+                        'end_at'       => $data['end_at'] ?? null,
                     ]);
 
                     $meeting->meetingUsers()->create([
@@ -67,9 +81,10 @@ class EditProject extends EditRecord
                         );
                     }
 
-                    $this->redirect(ProjectResource::getUrl('do', [
-                        'record'  => $this->record,
-                        'meeting' => $meeting->getKey(),
+                    $this->redirect(MeetingResource::getUrl('go', [
+                        'tenant' => filament()->getTenant()?->slug,
+                        'project' => $this->record,
+                        'record' => $meeting,
                     ]), navigate: true);
                 }),
             Action::make('connectWhatsApp')
@@ -77,8 +92,8 @@ class EditProject extends EditRecord
                 ->icon('heroicon-m-qr-code')
                 ->modalHeading('Scan WhatsApp QR code')
                 ->modalDescription('Open WhatsApp on your phone, tap Menu → Linked devices → Link a device, then scan the QR code below.')
-                ->modalContent(fn (): View => view('filament.whatsapp-qr-modal', [
-                    'sessionId' => 'project-'.$this->record->id,
+                ->modalContent(fn(): View => view('filament.whatsapp-qr-modal', [
+                    'sessionId' => 'project-' . $this->record->id,
                     'projectId' => $this->record->id,
                 ]))
                 ->modalSubmitAction(false)

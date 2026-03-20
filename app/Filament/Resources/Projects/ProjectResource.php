@@ -3,10 +3,10 @@
 namespace App\Filament\Resources\Projects;
 
 use App\Filament\Resources\Projects\Pages\CreateProject;
-use App\Filament\Resources\Projects\Pages\DoProject;
 use App\Filament\Resources\Projects\Pages\EditProject;
 use App\Filament\Resources\Projects\Pages\ListProjects;
 use App\Filament\Resources\Projects\Pages\ViewProject;
+use App\Filament\Resources\Projects\RelationManagers\MeetingsRelationManager;
 use App\Filament\Resources\Projects\Schemas\ProjectForm;
 use App\Filament\Resources\Projects\Schemas\ProjectInfolist;
 use App\Filament\Resources\Projects\Tables\ProjectsTable;
@@ -44,7 +44,7 @@ class ProjectResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            MeetingsRelationManager::class,
         ];
     }
 
@@ -54,7 +54,6 @@ class ProjectResource extends Resource
             'index'  => ListProjects::route('/'),
             'create' => CreateProject::route('/create'),
             'view'   => ViewProject::route('/{record}'),
-            'do'     => DoProject::route('/{record}/do/{meeting?}'),
             'edit'   => EditProject::route('/{record}/edit'),
         ];
     }

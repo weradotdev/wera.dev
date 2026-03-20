@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Projects\Pages;
 
 use App\Filament\Resources\Projects\ProjectResource;
+use App\Filament\Resources\Projects\Resources\Meetings\MeetingResource;
 use App\Filament\Widgets\BoardsKanbanWidget;
 use App\Models\User;
 use Filament\Actions\Action;
@@ -19,10 +20,10 @@ class ViewProject extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            Action::make('do')
-                ->label('Do')
+            Action::make('meetings')
+                ->label('Meetings')
                 ->icon('heroicon-m-video-camera')
-                ->url(fn (): string => ProjectResource::getUrl('do', ['record' => $this->record])),
+                ->url(fn (): string => MeetingResource::getUrl('create', ['parent' => $this->record])),
             CommentsAction::make()
                 ->mentionables(User::query()->orderBy('name')->get()),
             SubscriptionAction::make()

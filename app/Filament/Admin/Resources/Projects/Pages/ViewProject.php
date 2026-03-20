@@ -4,6 +4,7 @@ namespace App\Filament\Admin\Resources\Projects\Pages;
 
 use App\Events\GenerateDevelopmentPlanRequested;
 use App\Filament\Admin\Resources\Projects\ProjectResource;
+use App\Filament\Admin\Resources\Projects\Resources\Meetings\MeetingResource;
 use App\Filament\Widgets\BoardsKanbanWidget;
 use App\Models\Meeting;
 use App\Models\Plan;
@@ -15,7 +16,9 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Resources\Pages\ViewRecord;
 use Illuminate\Contracts\Support\Htmlable;
@@ -199,10 +202,21 @@ class ViewProject extends ViewRecord
                         );
                     }),
                 Action::make('startMeeting')
-                    ->label('Start Meeting')
+                    ->label('Start / Schedule Meeting')
                     ->icon('heroicon-m-video-camera')
                     ->color('primary')
                     ->form([
+                        TextInput::make('title')
+                            ->label('Meeting title')
+                            ->required()
+                            ->default(fn () => $project->name . ' meeting')
+                            ->maxLength(255),
+                        DateTimePicker::make('start_at')
+                            ->label('Scheduled start')
+                            ->helperText('Leave blank to start immediately'),
+                        DateTimePicker::make('end_at')
+                            ->label('Scheduled end')
+                            ->after('start_at'),
                         Select::make('attendees')
                             ->label('Invite attendees')
                             ->multiple()
@@ -222,9 +236,9 @@ class ViewProject extends ViewRecord
                         $meeting = Meeting::query()->create([
                             'project_id'   => $project->id,
                             'host_user_id' => filament()->auth()->id(),
-                            'title'        => $project->name.' meeting',
-                            'status'       => 'live',
-                            'started_at'   => now(),
+                            'title'        => $data['title'],
+                            'start_at'     => $data['start_at'] ?? null,
+                            'end_at'       => $data['end_at'] ?? null,
                         ]);
 
                         $meeting->meetingUsers()->create([
@@ -244,9 +258,10 @@ class ViewProject extends ViewRecord
                             );
                         }
 
-                        $this->redirect(ProjectResource::getUrl('do', [
-                            'record'  => $project,
-                            'meeting' => $meeting->getKey(),
+                        $this->redirect(MeetingResource::getUrl('go', [
+                            'tenant' => filament()->getTenant()?->slug,
+                            'project' => $project,
+                            'record' => $meeting,
                         ]), navigate: true);
                     }),
             ])

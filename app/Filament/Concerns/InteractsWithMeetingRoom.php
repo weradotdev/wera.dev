@@ -37,11 +37,8 @@ trait InteractsWithMeetingRoom
 
         $this->meeting = $meeting;
 
-        if ($this->meeting->status === 'scheduled') {
-            $this->meeting->update([
-                'status' => 'live',
-                'started_at' => $meeting->started_at ?? now(),
-            ]);
+        if ($this->meeting->started_at === null) {
+            $this->meeting->update(['started_at' => now()]);
             $this->meeting->refresh();
         }
 

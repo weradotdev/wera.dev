@@ -1,1 +1,1 @@
-@include('filament.resources.projects.pages.do-project')
+@include('filament.resources.meetings.pages.go-meeting')

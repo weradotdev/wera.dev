@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Database\Factories\MeetingFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -23,14 +22,15 @@ class Meeting extends Model
         'project_id',
         'host_user_id',
         'title',
-        'status',
+        'start_at',
+        'end_at',
         'started_at',
         'ended_at',
         'meta',
     ];
 
     protected $appends = [
-        'computed_status',
+        'status',
     ];
 
     /**
@@ -40,27 +40,32 @@ class Meeting extends Model
     {
         return [
             'meta'       => 'array',
+            'start_at'   => 'datetime',
+            'end_at'     => 'datetime',
             'started_at' => 'datetime',
             'ended_at'   => 'datetime',
         ];
     }
 
-    public function computedStatus(): Attribute
+    public function status(): Attribute
     {
         return Attribute::make(get: function (): string {
-            if ($this->ended_at !== null || in_array($this->status, ['ended', 'cancelled'], true)) {
+            // Meeting has actually ended
+            if (null !== $this->ended_at) {
                 return 'past';
             }
 
-            if ($this->started_at !== null) {
-                return $this->started_at->isFuture() ? 'upcoming' : 'ongoing';
+            // Meeting is live (actual start recorded, not yet ended)
+            if (null !== $this->started_at) {
+                return 'ongoing';
             }
 
-            return match ($this->status) {
-                'live' => 'ongoing',
-                'scheduled' => 'upcoming',
-                default => 'past',
-            };
+            // Not yet started — derive from schedule
+            if (null !== $this->start_at) {
+                return $this->start_at->isFuture() ? 'upcoming' : 'ongoing';
+            }
+
+            return 'upcoming';
         });
     }
 
