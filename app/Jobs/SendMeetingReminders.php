@@ -19,6 +19,9 @@ class SendMeetingReminders implements ShouldQueue
 
     public function handle(): void
     {
+        /**
+         * @var Meeting[]
+         */
         $meetings = Meeting::query()
             ->whereNotNull('start_at')
             ->where('start_at', '>', now())

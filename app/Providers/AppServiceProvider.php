@@ -45,13 +45,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Scramble::configure()
-            ->withDocumentTransformers(function (OpenApi $openApi) {
-                $openApi->secure(
-                    SecurityScheme::http('bearer')
-                );
-            });
-
         Event::listen(GenerateDevelopmentPlanRequested::class, PromptDevelopmentPlanAgent::class);
         Event::listen(DevelopmentPlanGenerated::class, StoreDevelopmentPlanRevision::class);
         Event::listen(GenerateProgressReportRequested::class, PromptProgressReportAgent::class);
@@ -82,6 +75,13 @@ class AppServiceProvider extends ServiceProvider
         }
 
         Scramble::registerApi('v1', ['api_path' => 'v1', 'info' => ['version' => '1.0']]);
+
+        Scramble::configure()
+            ->withDocumentTransformers(function (OpenApi $openApi) {
+                $openApi->secure(
+                    SecurityScheme::http('bearer')
+                );
+            });
 
         Scramble::configure()->withOperationTransformers(
             function (OperationTransformers $transformers): void {
