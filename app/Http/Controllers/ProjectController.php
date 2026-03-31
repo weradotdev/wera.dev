@@ -45,4 +45,9 @@ class ProjectController extends Controller
     {
         return ['creator', 'users'];
     }
+
+    public function aggregates(): array
+    {
+        return ['workspace', 'creator', 'boards', 'tasks', 'tickets', 'users', 'projectUsers', 'plans'];
+    }
 }

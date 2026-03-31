@@ -32,7 +32,7 @@ class ProjectForm
                 Group::make()
                     ->schema([
                         Hidden::make('user_id')
-                            ->default(fn(): ?int => filament()->auth()->id()),
+                            ->default(fn (): ?int => filament()->auth()->id()),
                         TextInput::make('name')
                             ->required()
                             ->live(onBlur: true)
@@ -49,7 +49,7 @@ class ProjectForm
                             ->default('#000000')
                             ->columnSpan(1),
                         Hidden::make('slug')
-                            ->default(fn(): string => strtolower(uniqid())),
+                            ->default(fn (): string => strtolower(uniqid())),
                         Textarea::make('description')
                             ->default(null)
                             ->columnSpanFull(),
@@ -141,11 +141,11 @@ class ProjectForm
                         ->label('Repository URL')
                         ->url()
                         ->placeholder('https://github.com/org/repo')
-                        ->visible(fn($get) => $get('settings.github.connected')),
+                        ->visible(fn ($get) => $get('settings.github.connected')),
                     Toggle::make('settings.github.create_issues_with_tasks')
                         ->label('Create GitHub issue for each task')
                         ->default($defaults['github']['create_issues_with_tasks'])
-                        ->visible(fn($get) => $get('settings.github.connected')),
+                        ->visible(fn ($get) => $get('settings.github.connected')),
                 ])
                 ->columns(1)
                 ->collapsible(),
@@ -159,35 +159,36 @@ class ProjectForm
                     TextEntry::make('setup')
                         ->hiddenLabel()
                         ->state('Connect via QR. Optionally send task notifications to a group and mention assignees.')
-                        ->visible(fn($get) => $get('settings.whatsapp.connected')),
+                        ->visible(fn ($get) => $get('settings.whatsapp.connected')),
                     TextInput::make('settings.whatsapp.session_id')
                         ->label('Session ID')
                         ->placeholder('project-1')
                         ->helperText('Set automatically after scanning QR in Connect WhatsApp, or use project-{id}.')
-                        ->visible(fn($get) => $get('settings.whatsapp.connected')),
+                        ->visible(fn ($get) => $get('settings.whatsapp.connected')),
                     Toggle::make('settings.whatsapp.has_group')
                         ->label('Send notifications to a WhatsApp group')
                         ->default($defaults['whatsapp']['has_group'])
-                        ->visible(fn($get) => $get('settings.whatsapp.connected')),
+                        ->visible(fn ($get) => $get('settings.whatsapp.connected')),
                     TextInput::make('settings.whatsapp.group_name')
                         ->label('Group name')
                         ->placeholder('Project Updates')
                         ->helperText('Label for your reference (e.g. project updates group).')
-                        ->visible(fn($get) => $get('settings.whatsapp.connected') && $get('settings.whatsapp.has_group')),
+                        ->visible(fn ($get) => $get('settings.whatsapp.connected') && $get('settings.whatsapp.has_group')),
                     TextInput::make('settings.whatsapp.group_jid')
                         ->label('Group JID')
                         ->placeholder('120363xxxxxxxxx@g.us')
                         ->helperText('Group identifier for sending messages (format: number@g.us). Get it from your WhatsApp/Baileys session.')
-                        ->required(fn($get) => $get('settings.whatsapp.has_group'))
-                        ->visible(fn($get) => $get('settings.whatsapp.connected') && $get('settings.whatsapp.has_group')),
+                        ->required(fn ($get) => $get('settings.whatsapp.has_group'))
+                        ->visible(fn ($get) => $get('settings.whatsapp.connected') && $get('settings.whatsapp.has_group')),
                 ])
                 ->headerActions([
                     Action::make('connectWhatsApp')
                         ->label('Scan QR')
                         ->icon('heroicon-m-qr-code')
                         ->modalHeading('Scan WhatsApp QR code')
-                        ->modalDescription('Open WhatsApp on your phone, tap Menu → Linked devices → Link a device, then scan the QR code below.')
-                        ->modalContent(fn(?Model $record): View => view('filament.whatsapp-qr-modal', [
+                        ->modalWidth('sm')
+                        ->modalIcon('hugeicons-whatsapp')
+                        ->modalContent(fn (?Model $record): View => view('filament.whatsapp-qr-modal', [
                             'sessionId' => "project-{$record?->id}",
                             'projectId' => $record?->id,
                         ]))
@@ -207,11 +208,11 @@ class ProjectForm
                         ->label('Webhook URL')
                         ->url()
                         ->placeholder('https://hooks.slack.com/services/...')
-                        ->visible(fn($get) => $get('settings.slack.connected')),
+                        ->visible(fn ($get) => $get('settings.slack.connected')),
                     TextInput::make('settings.slack.channel')
                         ->label('Channel')
                         ->placeholder('#general')
-                        ->visible(fn($get) => $get('settings.slack.connected')),
+                        ->visible(fn ($get) => $get('settings.slack.connected')),
                 ])
                 ->columns(1)
                 ->collapsible(),
@@ -225,7 +226,7 @@ class ProjectForm
                         ->label('Bot token')
                         ->password()
                         ->placeholder('123456:ABC-DEF...')
-                        ->visible(fn($get) => $get('settings.telegram.connected')),
+                        ->visible(fn ($get) => $get('settings.telegram.connected')),
                 ])
                 ->columns(1)
                 ->collapsible(),

@@ -32,7 +32,7 @@ const envFromRoot = loadEnvFromFile(path.join(rootDir, '.env'));
 
 const whatsappEnv = {
   PORT: envFromRoot.WHATSAPP_SERVICE_PORT || envFromRoot.PORT || '3000',
-  APP_URL: envFromRoot.APP_URL || 'http://localhost:8000',
+  APP_URL: envFromRoot.APP_URL || 'https://api.wera.dev',
   WHATSAPP_CALLBACK_TOKEN: envFromRoot.WHATSAPP_CALLBACK_TOKEN || '',
 };
 

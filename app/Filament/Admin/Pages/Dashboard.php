@@ -44,4 +44,11 @@ class Dashboard extends \Filament\Pages\Dashboard
 
         return "Welcome back, {$user->first_name}!";
     }
+
+    public function getSubheading(): string|\Illuminate\Contracts\Support\Htmlable|null
+    {
+        $ws = filament()->getTenant();
+
+        return "Manage {$ws->name} workspace and stay on top of your projects.";
+    }
 }

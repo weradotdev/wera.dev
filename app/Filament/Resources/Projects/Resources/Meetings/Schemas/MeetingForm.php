@@ -13,7 +13,7 @@ class MeetingForm
     {
         return $schema
             ->components([
-                Hidden::make('host_user_id')
+                Hidden::make('user_id')
                     ->default(fn (): ?int => filament()->auth()->id()),
                 TextInput::make('title')
                     ->required()

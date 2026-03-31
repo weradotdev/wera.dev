@@ -48,7 +48,7 @@ class ViewProject extends ViewRecord
                     ->modalWidth('md')
                     ->modalSubheading('Generate a plan for the project')
                     ->modalSubmitActionLabel('Generate Plan')
-                    ->form([
+                    ->schema([
                         Textarea::make('description')
                             ->label('Description')
                             ->placeholder('Project context and scope for the implementation plan')
@@ -205,7 +205,7 @@ class ViewProject extends ViewRecord
                     ->label('Start / Schedule Meeting')
                     ->icon('heroicon-m-video-camera')
                     ->color('primary')
-                    ->form([
+                    ->schema([
                         TextInput::make('title')
                             ->label('Meeting title')
                             ->required()
@@ -235,7 +235,7 @@ class ViewProject extends ViewRecord
                     ->action(function (array $data) use ($project): void {
                         $meeting = Meeting::query()->create([
                             'project_id'   => $project->id,
-                            'host_user_id' => filament()->auth()->id(),
+                            'user_id' => filament()->auth()->id(),
                             'title'        => $data['title'],
                             'start_at'     => $data['start_at'] ?? null,
                             'end_at'       => $data['end_at'] ?? null,

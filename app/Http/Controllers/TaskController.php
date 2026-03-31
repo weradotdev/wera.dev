@@ -45,4 +45,9 @@ class TaskController extends Controller
     {
         return ['assignedUsers', 'project', 'creator', 'board'];
     }
+
+    public function aggregates(): array
+    {
+        return ['workspace', 'project', 'creator', 'board', 'ticket', 'assignedUsers', 'taskUsers'];
+    }
 }

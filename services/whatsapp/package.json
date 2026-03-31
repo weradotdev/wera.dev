@@ -1,5 +1,5 @@
 {
-  "name": "wera-whatsapp",
+  "name": "@wera/whatsapp",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -8,8 +8,8 @@
     "dev": "node --watch server.js"
   },
   "dependencies": {
-    "@whiskeysockets/baileys": "^6.7.9",
-    "express": "^4.21.0",
+    "@whiskeysockets/baileys": "^7.0.0-rc.9",
+    "express": "^5.2.1",
     "qrcode": "^1.5.4"
   }
 }

@@ -33,4 +33,9 @@ class WorkspaceController extends Controller
     {
         return [];
     }
+
+    public function aggregates(): array
+    {
+        return ['projects', 'boards', 'tasks', 'tickets', 'users', 'workspaceUsers'];
+    }
 }

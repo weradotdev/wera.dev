@@ -35,4 +35,9 @@ class TaskUserController extends Controller
     {
         return [];
     }
+
+    public function aggregates(): array
+    {
+        return ['task', 'user'];
+    }
 }

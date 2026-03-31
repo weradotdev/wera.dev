@@ -60,7 +60,7 @@ class TicketsTable
                     ->icon('heroicon-o-user-plus')
                     ->color('primary')
                     ->visible(fn (?Ticket $record) => $record && in_array($record->status, ['open', 'assigned'], true))
-                    ->form(fn (Ticket $record): array => [
+                    ->schema(fn (Ticket $record): array => [
                         Select::make('user_ids')
                             ->label('Users')
                             ->options(

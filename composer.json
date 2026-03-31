@@ -9,6 +9,7 @@
         "php": "^8.2",
         "afatmustafa/blade-hugeicons": "*",
         "barryvdh/laravel-dompdf": "^3.1",
+        "bilfeldt/laravel-http-client-logger": "^2.5",
         "codewithkyrian/filament-date-range": "^2.2",
         "dedoc/scramble": "^0.13.14",
         "dutchcodingcompany/filament-socialite": "^3.1",
@@ -28,10 +29,12 @@
         "laravel/tinker": "^2.10.1",
         "phiki/phiki": "^2.1",
         "relaticle/flowforge": "^4.0",
+        "stumason/laravel-coolify": "^3.3",
         "tailflow/laravel-orion": "^1.2",
         "ysfkaya/filament-phone-input": "^4.1"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^4.2",
         "barryvdh/laravel-ide-helper": "^3.6",
         "fakerphp/faker": "^1.23",
         "laravel/boost": "^2.0",

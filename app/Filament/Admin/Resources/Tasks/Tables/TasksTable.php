@@ -117,7 +117,7 @@ class TasksTable
                     ->label('Assign')
                     ->icon('heroicon-o-user-plus')
                     ->color('primary')
-                    ->form(fn(Task $record): array => [
+                    ->schema(fn(Task $record): array => [
                         Repeater::make('assignments')
                             ->label('Assigned users')
                             ->schema([

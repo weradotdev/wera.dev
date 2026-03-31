@@ -36,4 +36,9 @@ class PlanController extends Controller
     {
         return [];
     }
+
+    public function aggregates(): array
+    {
+        return ['planable', 'workspace', 'user', 'revisions'];
+    }
 }

@@ -28,7 +28,7 @@ class EditProject extends EditRecord
                 ->label('Start / Schedule Meeting')
                 ->icon('heroicon-m-video-camera')
                 ->visible(fn () => filament()->auth()->id() === $this->record->user_id)
-                ->form([
+                ->schema([
                     TextInput::make('title')
                         ->label('Meeting title')
                         ->required()
@@ -58,7 +58,7 @@ class EditProject extends EditRecord
                 ->action(function (array $data): void {
                     $meeting = Meeting::query()->create([
                         'project_id'   => $this->record->id,
-                        'host_user_id' => filament()->auth()->id(),
+                        'user_id' => filament()->auth()->id(),
                         'title'        => $data['title'],
                         'start_at'     => $data['start_at'] ?? null,
                         'end_at'       => $data['end_at'] ?? null,

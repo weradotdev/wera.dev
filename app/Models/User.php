@@ -74,12 +74,12 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
     /**
      * Get the avatar URL, or a Gravatar image URL when no avatar is uploaded.
      */
-    protected function avatar(): Attribute
+    protected function avatarUrl(): Attribute
     {
         return Attribute::make(
-            get: function (?string $value): string {
-                if (filled($value)) {
-                    return $value;
+            get: function (): string {
+                if (filled($this->avatar)) {
+                    return asset("storage/avatars/{$this->avatar}");
                 }
 
                 $hash = md5(strtolower(trim($this->email ?? '')));
@@ -113,7 +113,7 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
 
     public function hostedMeetings(): HasMany
     {
-        return $this->hasMany(Meeting::class, 'host_user_id');
+        return $this->hasMany(Meeting::class, 'user_id');
     }
 
     public function meetings(): BelongsToMany

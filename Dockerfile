@@ -25,7 +25,7 @@ RUN mkdir -p /var/www/html/storage /var/www/html/bootstrap/cache
 
 RUN chown -R unit:unit /var/www/html/storage bootstrap/cache && chmod -R 775 /var/www/html/storage
 
-COPY --chown=unit:unit . .
+COPY . .
 
 RUN composer install --prefer-dist --optimize-autoloader --no-interaction
 
@@ -33,12 +33,10 @@ RUN bun install && bun run build && rm -rf /var/www/html/.bun /var/www/html/node
 
 RUN chown -R unit:unit storage bootstrap/cache && chmod -R 775 storage bootstrap/cache
 
-COPY --chown=unit:unit unit.json /docker-entrypoint.d/unit.json
+COPY unit.json /docker-entrypoint.d/unit.json
 
 EXPOSE 80
 
-COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
-
-ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 CMD ["unitd", "--no-daemon"]
+
+# ENTRYPOINT ["/entrypoint.sh"]

@@ -33,4 +33,9 @@ class BoardController extends Controller
     {
         return ['project', 'tasks'];
     }
+
+    public function aggregates(): array
+    {
+        return ['project', 'tasks'];
+    }
 }

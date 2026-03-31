@@ -20,7 +20,7 @@ class Meeting extends Model
      */
     protected $fillable = [
         'project_id',
-        'host_user_id',
+        'user_id',
         'title',
         'start_at',
         'end_at',
@@ -69,14 +69,22 @@ class Meeting extends Model
         });
     }
 
+    /**
+     * Summary of project
+     * @return BelongsTo<Project, Meeting>
+     */
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);
     }
 
+    /**
+     * Summary of host
+     * @return BelongsTo<User, Meeting>
+     */
     public function host(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'host_user_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function meetingUsers(): HasMany
@@ -84,6 +92,10 @@ class Meeting extends Model
         return $this->hasMany(MeetingUser::class);
     }
 
+    /**
+     * Summary of attendees
+     * @return BelongsToMany<User, Meeting>
+     */
     public function attendees(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'meeting_users')

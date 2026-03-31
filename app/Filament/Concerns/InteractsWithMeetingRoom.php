@@ -132,10 +132,10 @@ trait InteractsWithMeetingRoom
         $this->meeting->meetingUsers()->updateOrCreate(
             ['user_id' => $userId],
             [
-                'invited_by_user_id' => $this->meeting->host_user_id,
+                'invited_by_user_id' => $this->meeting->user_id,
                 'joined_at' => now(),
                 'left_at' => null,
-                'is_host' => $this->meeting->host_user_id === $userId,
+                'is_host' => $this->meeting->user_id === $userId,
             ]
         );
 
@@ -190,7 +190,7 @@ trait InteractsWithMeetingRoom
             return false;
         }
 
-        if ($this->meeting->host_user_id === $currentUserId) {
+        if ($this->meeting->user_id === $currentUserId) {
             return true;
         }
 

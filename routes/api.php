@@ -70,36 +70,36 @@ Route::domain(env('API_DOMAIN', 'api.wera.dev'))
                     Orion::hasManyResource('tasks', 'users', TaskUserController::class);
                 });
             });
+
+        Route::post('/whatsapp-incoming', function (Request $request) {
+            $token = config('services.whatsapp.callback_token');
+            if (filled($token) && $request->header('X-Callback-Token') !== $token) {
+                abort(401);
+            }
+            $sessionId = $request->input('session_id');
+            $from      = $request->input('from', '');
+            $message   = $request->input('message', '');
+            if (blank($sessionId) || blank($from)) {
+                abort(422, 'session_id and from required');
+            }
+            $reply = app(WhatsAppCommandHandler::class)->handle($sessionId, $from, $message);
+
+            return response()->json(['reply' => $reply]);
+        })->name('whatsapp.incoming');
+
+        Route::post('/whatsapp-callback', function (Request $request) {
+            $token = config('services.whatsapp.callback_token');
+            if (filled($token) && $request->header('X-Callback-Token') !== $token) {
+                abort(401);
+            }
+            $sessionId = $request->input('session_id');
+            if (blank($sessionId)) {
+                abort(422, 'session_id required');
+            }
+            $qr        = $request->input('qr');
+            $connected = (bool) $request->input('connected', false);
+            event(new WhatsAppConnectionUpdate($sessionId, $qr, $connected));
+
+            return response()->json(['ok' => true]);
+        })->name('whatsapp.callback');
     });
-
-Route::post('/whatsapp-incoming', function (Request $request) {
-    $token = config('services.whatsapp.callback_token');
-    if (filled($token) && $request->header('X-Callback-Token') !== $token) {
-        abort(401);
-    }
-    $sessionId = $request->input('session_id');
-    $from      = $request->input('from', '');
-    $message   = $request->input('message', '');
-    if (blank($sessionId) || blank($from)) {
-        abort(422, 'session_id and from required');
-    }
-    $reply = app(WhatsAppCommandHandler::class)->handle($sessionId, $from, $message);
-
-    return response()->json(['reply' => $reply]);
-})->name('api.whatsapp.incoming');
-
-Route::post('/whatsapp-callback', function (Request $request) {
-    $token = config('services.whatsapp.callback_token');
-    if (filled($token) && $request->header('X-Callback-Token') !== $token) {
-        abort(401);
-    }
-    $sessionId = $request->input('session_id');
-    if (blank($sessionId)) {
-        abort(422, 'session_id required');
-    }
-    $qr        = $request->input('qr');
-    $connected = (bool) $request->input('connected', false);
-    event(new WhatsAppConnectionUpdate($sessionId, $qr, $connected));
-
-    return response()->json(['ok' => true]);
-})->name('api.whatsapp.callback');

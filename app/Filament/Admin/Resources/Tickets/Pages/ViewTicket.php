@@ -28,7 +28,7 @@ class ViewTicket extends ViewRecord
                 ->icon('heroicon-o-user-plus')
                 ->color('primary')
                 ->visible(fn () => in_array($record->status, ['open', 'assigned'], true))
-                ->form(fn (): array => [
+                ->schema(fn (): array => [
                     Select::make('user_ids')
                         ->label('Users')
                         ->options(

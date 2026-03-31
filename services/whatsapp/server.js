@@ -2,6 +2,7 @@
  * @author Wera.dev <wut@wera.dev>
  * @license MIT
  * @see https://github.com/weradotdev/whatsapp/blob/main/README.md
+ * @see https://medium.com/@elvisbrazil/automating-whatsapp-with-node-js-and-baileys-send-receive-and-broadcast-messages-with-code-0656c40bd928
  * 
  * WhatsApp Baileys service for Wera.
  * Exposes QR flow and send API keyed by session_id (e.g. project-1).
@@ -12,7 +13,7 @@
  */
 
 import { dirname, join } from 'path';
-import makeWASocket, { DisconnectReason, useMultiFileAuthState } from '@whiskeysockets/baileys';
+import makeWASocket, { DisconnectReason, fetchLatestBaileysVersion, useMultiFileAuthState } from '@whiskeysockets/baileys';
 
 import QRCode from 'qrcode';
 import express from 'express';
@@ -43,7 +44,12 @@ async function getOrCreateSocket(sessionId) {
   await mkdir(authPath, { recursive: true });
   const { state, saveCreds } = await useMultiFileAuthState(authPath);
 
+  // Fetch the latest WhatsApp Web version (Baileys recommended fix)
+  const { version, isLatest } = await fetchLatestBaileysVersion();
+  console.log(`Using WhatsApp Web v${version.join('.')}, isLatest: ${isLatest}`);
+
   const socket = makeWASocket({
+    version, // Pass the latest version to the socket
     auth: state,
     printQRInTerminal: false,
   });
@@ -55,8 +61,8 @@ async function getOrCreateSocket(sessionId) {
   };
   sessions.set(sessionId, session);
 
-  const baseUrl = (process.env.APP_URL || 'http://localhost:8000').replace(/\/$/, '');
-  const callbackUrl = `${baseUrl}/api/whatsapp-callback`;
+  const baseUrl = (process.env.API_URL || 'https://api.wera.dev').replace(/\/$/, '');
+  const callbackUrl = `${baseUrl}/whatsapp-callback`;
   const callbackToken = process.env.WHATSAPP_CALLBACK_TOKEN;
 
   async function notifyLaravel(payload) {
@@ -101,11 +107,11 @@ async function getOrCreateSocket(sessionId) {
       }
     }
   });
+  
   socket.ev.on('creds.update', saveCreds);
 
-  const laravelUrl = baseUrl;
   socket.ev.on('messages.upsert', async ({ type, messages }) => {
-    if (type !== 'notify' || !laravelUrl) return;
+    if (type !== 'notify' || !baseUrl) return;
     for (const msg of messages) {
       if (msg.key.fromMe) continue;
       const text = msg.message?.conversation || msg.message?.extendedTextMessage?.text;
@@ -117,7 +123,7 @@ async function getOrCreateSocket(sessionId) {
       try {
         const headers = { 'Content-Type': 'application/json' };
         if (callbackToken) headers['X-Callback-Token'] = callbackToken;
-        const res = await fetch(`${laravelUrl.replace(/\/$/, '')}/api/whatsapp-incoming`, {
+        const res = await fetch(`${baseUrl.replace(/\/$/, '')}/whatsapp-incoming`, {
           method: 'POST',
           headers,
           body: JSON.stringify({ session_id: sessionId, from, message: trimmed }),

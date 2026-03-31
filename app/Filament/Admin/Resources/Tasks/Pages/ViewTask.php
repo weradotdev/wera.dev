@@ -29,7 +29,8 @@ class ViewTask extends ViewRecord
                 ->label('Assignment')
                 ->icon('heroicon-o-user-plus')
                 ->color('primary')
-                ->form(fn (): array => [
+                ->modalWidth('lg')
+                ->schema(fn (): array => [
                     Repeater::make('assignments')
                         ->label('Assigned users')
                         ->schema([
@@ -49,6 +50,7 @@ class ViewTask extends ViewRecord
                                 ->required()
                                 ->default('developer'),
                         ])
+                        ->addActionLabel('Assign another user')
                         ->columns(2)
                         ->default(fn () => $record->assignedUsers->map(fn ($user) => [
                             'user_id' => $user->id,
@@ -79,6 +81,6 @@ class ViewTask extends ViewRecord
 
     public function getSubheading(): string|\Illuminate\Contracts\Support\Htmlable|null
     {
-        return $this->record->description ? str()->limit($this->record->description, 100) : null;
+        return $this->record->workspace->name;
     }
 }

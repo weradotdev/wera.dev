@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/bin/sh
+
 set -e
 
 echo "Fixing storage and cache permissions..."
@@ -11,4 +12,9 @@ ls -la /var/www/html/bootstrap/cache
 
 php artisan optimize:clear
 
+# Link storage and public folders
+php artisan storage:link || true
+
 echo "Done."
+
+exec "$@"

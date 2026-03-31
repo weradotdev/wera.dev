@@ -17,8 +17,9 @@ class TaskInfolist
     {
         return $schema
             ->components([
-                TextEntry::make('workspace.name')
-                    ->label('Workspace'),
+                TextEntry::make('description')
+                ->hiddenLabel()
+                ->columnSpanFull(),
                 TextEntry::make('project.name')
                     ->label('Project')
                     ->url(fn(Task $record) => ProjectResource::getUrl('view', [
