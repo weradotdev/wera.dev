@@ -9,6 +9,7 @@ use App\Filament\Admin\Resources\Projects\Pages\ViewProject;
 use App\Filament\Admin\Resources\Projects\RelationManagers\BoardsRelationManager;
 use App\Filament\Admin\Resources\Projects\RelationManagers\MeetingsRelationManager;
 use App\Filament\Admin\Resources\Projects\RelationManagers\TasksRelationManager;
+use App\Filament\Admin\Resources\Projects\RelationManagers\UsersRelationManager;
 use App\Filament\Admin\Resources\Projects\Schemas\ProjectForm;
 use App\Filament\Admin\Resources\Projects\Schemas\ProjectInfolist;
 use App\Filament\Admin\Resources\Projects\Tables\ProjectsTable;
@@ -46,6 +47,7 @@ class ProjectResource extends Resource
         return [
             BoardsRelationManager::class,
             TasksRelationManager::class,
+            UsersRelationManager::class,
             MeetingsRelationManager::class,
         ];
     }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class () extends Migration {
     /**
      * Run the migrations.
      */
@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->string('first_name');
             $table->string('last_name')->nullable();
-            if ('pgsql' === config('database.default')) {
+            if (in_array(config('database.default'), ['pgsql', 'sqlite'])) {
                 $table->string('name')->storedAs("first_name || ' ' || last_name");
             } else {
                 $table->string('name')->virtualAs("CONCAT(first_name, ' ', last_name)");

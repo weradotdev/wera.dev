@@ -33,10 +33,14 @@ RUN bun install && bun run build && rm -rf /var/www/html/.bun /var/www/html/node
 
 RUN chown -R unit:unit storage bootstrap/cache && chmod -R 775 storage bootstrap/cache
 
+# COPY entrypoint.sh /usr/local/bin/
+
+# RUN chmod +x /usr/local/bin/entrypoint.sh
+
 COPY unit.json /docker-entrypoint.d/unit.json
 
 EXPOSE 80
 
-CMD ["unitd", "--no-daemon"]
+# ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
-# ENTRYPOINT ["/entrypoint.sh"]
+CMD ["unitd", "--no-daemon"]

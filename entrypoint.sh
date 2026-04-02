@@ -15,6 +15,10 @@ php artisan optimize:clear
 # Link storage and public folders
 php artisan storage:link || true
 
+php artisan migrate --force
+
+php artisan db:seed --force
+
 echo "Done."
 
 exec "$@"
