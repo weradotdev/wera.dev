@@ -125,7 +125,7 @@ class Project extends Model implements Commentable, HasAvatar, HasMedia, HasName
             return null;
         }
 
-        return Storage::disk('public')->url($this->icon);
+        return $this->icon_url;
     }
 
     public function getFilamentName(): string

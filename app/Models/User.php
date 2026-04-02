@@ -177,7 +177,7 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
 
     public function getFilamentAvatarUrl(): ?string
     {
-        return $this->avatar;
+        return $this->avatar_url;
     }
 
     /**
