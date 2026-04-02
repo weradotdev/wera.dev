@@ -9,8 +9,10 @@ use App\Models\User;
 use Dedoc\Scramble\Attributes\Group;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 #[Group('Authentication')]
@@ -111,6 +113,38 @@ class AuthController extends Controller
     public function me(Request $request)
     {
         return response()->json(new UserResource($request->user()), 200);
+    }
+
+    /**
+     * Update the authenticated user's avatar.
+     */
+    public function updateAvatar(Request $request): JsonResponse
+    {
+        /** @var User $user */
+        $user = $request->user();
+
+        $payload = $request->validate([
+            'avatar' => ['required', 'image', 'max:10240'],
+        ]);
+
+        $file = $payload['avatar'];
+        $extension = $file->extension() ?: $file->getClientOriginalExtension() ?: 'jpg';
+        $filename = Str::uuid()->toString().'.'.$extension;
+
+        if (filled($user->avatar)) {
+            Storage::disk('public')->delete('avatars/'.$user->avatar);
+        }
+
+        $file->storeAs('avatars', $filename, 'public');
+
+        $user->forceFill([
+            'avatar' => $filename,
+        ])->save();
+
+        return response()->json([
+            'message' => 'Avatar updated successfully.',
+            'user' => new UserResource($user->fresh()),
+        ], 200);
     }
 
     /**

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f1e9c171443e825af984a6c2b2b8b163",
+    "content-hash": "20006d87ef7934a5b4b223727cdfe228",
     "packages": [
         {
             "name": "afatmustafa/blade-hugeicons",
@@ -10490,77 +10490,6 @@
                 }
             ],
             "time": "2026-01-12T07:42:22+00:00"
-        },
-        {
-            "name": "stumason/laravel-coolify",
-            "version": "v3.3.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/StuMason/laravel-coolify.git",
-                "reference": "f3f3e10d9d9ed9b692209165ca051c6209a4c300"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/StuMason/laravel-coolify/zipball/f3f3e10d9d9ed9b692209165ca051c6209a4c300",
-                "reference": "f3f3e10d9d9ed9b692209165ca051c6209a4c300",
-                "shasum": ""
-            },
-            "require": {
-                "guzzlehttp/guzzle": "^7.5",
-                "illuminate/console": "^11.0|^12.0|^13.0",
-                "illuminate/contracts": "^11.0|^12.0|^13.0",
-                "illuminate/http": "^11.0|^12.0|^13.0",
-                "illuminate/support": "^11.0|^12.0|^13.0",
-                "php": "^8.2"
-            },
-            "require-dev": {
-                "laravel/pint": "^1.18",
-                "mockery/mockery": "^1.6",
-                "orchestra/testbench": "^9.0|^10.0",
-                "pestphp/pest": "^3.0",
-                "pestphp/pest-plugin-laravel": "^3.0",
-                "phpstan/phpstan": "^2.1"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "aliases": {
-                        "Coolify": "Stumason\\Coolify\\Facades\\Coolify"
-                    },
-                    "providers": [
-                        "Stumason\\Coolify\\CoolifyServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Stumason\\Coolify\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Stu Mason",
-                    "email": "stu@stuartmason.co.uk"
-                }
-            ],
-            "description": "Manage, deploy, and monitor your Laravel application on Coolify - like Horizon for your infrastructure.",
-            "keywords": [
-                "coolify",
-                "deployment",
-                "devops",
-                "infrastructure",
-                "laravel",
-                "monitoring"
-            ],
-            "support": {
-                "issues": "https://github.com/StuMason/laravel-coolify/issues",
-                "source": "https://github.com/StuMason/laravel-coolify/tree/v3.3.0"
-            },
-            "time": "2026-03-26T11:05:44+00:00"
         },
         {
             "name": "symfony/cache",

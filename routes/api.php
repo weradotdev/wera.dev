@@ -44,6 +44,7 @@ Route::domain(env('API_DOMAIN', 'api.wera.dev'))
                         ->controller(AuthController::class)
                         ->group(function () {
                             Route::get('me', 'me')->name('me');
+                            Route::post('avatar', 'updateAvatar')->name('avatar.update');
                             Route::post('call-token', 'streamToken')->name('stream.token');
                             Route::post('logout', 'logout')->name('logout');
 
