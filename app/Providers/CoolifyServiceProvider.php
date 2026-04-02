@@ -3,8 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Support\Facades\Gate;
-use Stumason\Coolify\CoolifyApplicationServiceProvider;
 use Stumason\Coolify\Coolify;
+use Stumason\Coolify\CoolifyApplicationServiceProvider;
 
 class CoolifyServiceProvider extends CoolifyApplicationServiceProvider
 {

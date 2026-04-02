@@ -25,7 +25,7 @@ trait InteractsWithMeetingRoom
 
         $userId = Auth::id();
 
-        abort_if($userId === null, 403);
+        abort_if(null === $userId, 403);
 
         $isParticipant = $meeting->meetingUsers()->where('user_id', $userId)->exists();
         $isProjectOwner = $meeting->project->projectUsers()
@@ -37,7 +37,7 @@ trait InteractsWithMeetingRoom
 
         $this->meeting = $meeting;
 
-        if ($this->meeting->started_at === null) {
+        if (null === $this->meeting->started_at) {
             $this->meeting->update(['started_at' => now()]);
             $this->meeting->refresh();
         }
@@ -63,11 +63,11 @@ trait InteractsWithMeetingRoom
 
         $userId = Auth::id();
 
-        if ($userId === null) {
+        if (null === $userId) {
             return;
         }
 
-        if ($toUserId !== null) {
+        if (null !== $toUserId) {
             $isKnownAttendee = $this->meeting->meetingUsers()->where('user_id', $toUserId)->exists();
 
             if (! $isKnownAttendee) {
@@ -92,7 +92,7 @@ trait InteractsWithMeetingRoom
 
         $userId = Auth::id();
 
-        if ($userId === null) {
+        if (null === $userId) {
             abort(403);
         }
 
@@ -107,7 +107,7 @@ trait InteractsWithMeetingRoom
                 ['user_id' => $inviteeId],
                 [
                     'invited_by_user_id' => $userId,
-                    'is_host' => false,
+                    'is_host'            => false,
                 ]
             );
         }
@@ -125,7 +125,7 @@ trait InteractsWithMeetingRoom
     {
         $userId = Auth::id();
 
-        if ($userId === null) {
+        if (null === $userId) {
             return;
         }
 
@@ -133,9 +133,9 @@ trait InteractsWithMeetingRoom
             ['user_id' => $userId],
             [
                 'invited_by_user_id' => $this->meeting->user_id,
-                'joined_at' => now(),
-                'left_at' => null,
-                'is_host' => $this->meeting->user_id === $userId,
+                'joined_at'          => now(),
+                'left_at'            => null,
+                'is_host'            => $this->meeting->user_id === $userId,
             ]
         );
 
@@ -146,7 +146,7 @@ trait InteractsWithMeetingRoom
     {
         $userId = Auth::id();
 
-        if ($userId === null) {
+        if (null === $userId) {
             return;
         }
 
@@ -167,7 +167,7 @@ trait InteractsWithMeetingRoom
             ->orderBy('first_name')
             ->get(['users.id', 'first_name', 'last_name', 'email'])
             ->mapWithKeys(fn (User $user): array => [
-                $user->id => trim($user->first_name . ' ' . $user->last_name) . ' (' . $user->email . ')',
+                $user->id => trim($user->first_name.' '.$user->last_name).' ('.$user->email.')',
             ])
             ->all();
     }
@@ -186,7 +186,7 @@ trait InteractsWithMeetingRoom
     {
         $currentUserId = Auth::id();
 
-        if ($currentUserId === null) {
+        if (null === $currentUserId) {
             return false;
         }
 

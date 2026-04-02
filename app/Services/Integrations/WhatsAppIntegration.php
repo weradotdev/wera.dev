@@ -17,7 +17,7 @@ class WhatsAppIntegration
     /**
      * Send a message to the project's WhatsApp group, e.g. to notify and mention assignees.
      *
-     * @param  array<int, string>  $assigneeNames  Names to mention in the message (e.g. assignee names)
+     * @param array<int, string> $assigneeNames Names to mention in the message (e.g. assignee names)
      */
     public function sendToGroup(Project $project, string $message, array $assigneeNames = []): bool
     {
@@ -33,7 +33,7 @@ class WhatsAppIntegration
             $groupJid .= '@g.us';
         }
         $body = $message;
-        if ($assigneeNames !== []) {
+        if ([] !== $assigneeNames) {
             $body .= "\n\nAssignees: ".implode(', ', $assigneeNames);
         }
 

@@ -18,8 +18,8 @@ use Filament\Actions\ActionGroup;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Pages\ViewRecord;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
@@ -209,7 +209,7 @@ class ViewProject extends ViewRecord
                         TextInput::make('title')
                             ->label('Meeting title')
                             ->required()
-                            ->default(fn () => $project->name . ' meeting')
+                            ->default(fn () => $project->name.' meeting')
                             ->maxLength(255),
                         DateTimePicker::make('start_at')
                             ->label('Scheduled start')
@@ -234,11 +234,11 @@ class ViewProject extends ViewRecord
                     ])
                     ->action(function (array $data) use ($project): void {
                         $meeting = Meeting::query()->create([
-                            'project_id'   => $project->id,
-                            'user_id' => filament()->auth()->id(),
-                            'title'        => $data['title'],
-                            'start_at'     => $data['start_at'] ?? null,
-                            'end_at'       => $data['end_at'] ?? null,
+                            'project_id' => $project->id,
+                            'user_id'    => filament()->auth()->id(),
+                            'title'      => $data['title'],
+                            'start_at'   => $data['start_at'] ?? null,
+                            'end_at'     => $data['end_at'] ?? null,
                         ]);
 
                         $meeting->meetingUsers()->create([
@@ -259,9 +259,9 @@ class ViewProject extends ViewRecord
                         }
 
                         $this->redirect(MeetingResource::getUrl('go', [
-                            'tenant' => filament()->getTenant()?->slug,
+                            'tenant'  => filament()->getTenant()?->slug,
                             'project' => $project,
-                            'record' => $meeting,
+                            'record'  => $meeting,
                         ]), navigate: true);
                     }),
             ])

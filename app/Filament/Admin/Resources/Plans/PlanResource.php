@@ -6,9 +6,9 @@ use App\Filament\Admin\Resources\Plans\Pages\CreatePlan;
 use App\Filament\Admin\Resources\Plans\Pages\EditPlan;
 use App\Filament\Admin\Resources\Plans\Pages\ListPlans;
 use App\Filament\Admin\Resources\Plans\Pages\ViewPlan;
+use App\Filament\Admin\Resources\Plans\RelationManagers\RevisionsRelationManager;
 use App\Filament\Admin\Resources\Plans\Schemas\PlanForm;
 use App\Filament\Admin\Resources\Plans\Schemas\PlanInfolist;
-use App\Filament\Admin\Resources\Plans\RelationManagers\RevisionsRelationManager;
 use App\Filament\Admin\Resources\Plans\Tables\PlansTable;
 use App\Models\Plan;
 use BackedEnum;
@@ -51,10 +51,10 @@ class PlanResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListPlans::route('/'),
+            'index'  => ListPlans::route('/'),
             'create' => CreatePlan::route('/create'),
-            'view' => ViewPlan::route('/{record}'),
-            'edit' => EditPlan::route('/{record}/edit'),
+            'view'   => ViewPlan::route('/{record}'),
+            'edit'   => EditPlan::route('/{record}/edit'),
         ];
     }
 }

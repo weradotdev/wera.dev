@@ -21,11 +21,11 @@ class UserInfolist
                         TextEntry::make('type')
                             ->badge()
                             ->formatStateUsing(fn (?string $state): string => match ($state) {
-                                'admin' => 'Admin',
-                                'developer' => 'Developer',
-                                'client' => 'Client',
+                                'admin'           => 'Admin',
+                                'developer'       => 'Developer',
+                                'client'          => 'Client',
                                 'project_manager' => 'Project Manager',
-                                default => (string) $state,
+                                default           => (string) $state,
                             }),
                         TextEntry::make('email_verified_at')
                             ->dateTime()

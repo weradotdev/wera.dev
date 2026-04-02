@@ -49,9 +49,9 @@ return [
     ],
 
     'whatsapp' => [
-        'url'                 => env('WHATSAPP_BAILEYS_URL', 'http://localhost:3000'),
-        'callback_token'      => env('WHATSAPP_CALLBACK_TOKEN'),
-        'default_session_id'  => env('WHATSAPP_DEFAULT_SESSION_ID'),
+        'url'                => env('WHATSAPP_BAILEYS_URL', 'http://localhost:3000'),
+        'callback_token'     => env('WHATSAPP_CALLBACK_TOKEN'),
+        'default_session_id' => env('WHATSAPP_DEFAULT_SESSION_ID'),
     ],
 
 ];

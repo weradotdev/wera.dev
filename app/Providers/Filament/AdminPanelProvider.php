@@ -17,16 +17,16 @@ use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Panel;
 use Filament\PanelProvider;
-use Guava\FilamentKnowledgeBase\Plugins\KnowledgeBaseCompanionPlugin;
 use Filament\Support\Colors\Color;
 use Filament\Support\Enums\Width;
-use Laravel\Socialite\Contracts\User as SocialiteUserContract;
+use Guava\FilamentKnowledgeBase\Plugins\KnowledgeBaseCompanionPlugin;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Laravel\Socialite\Contracts\User as SocialiteUserContract;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -96,7 +96,7 @@ class AdminPanelProvider extends PanelProvider
                         return User::query()->create([
                             'name'     => $oauthUser->getName() ?? $oauthUser->getEmail(),
                             'email'    => $oauthUser->getEmail(),
-                            'phone'    => 'oauth-' . $provider . '-' . $oauthUser->getId(),
+                            'phone'    => 'oauth-'.$provider.'-'.$oauthUser->getId(),
                             'password' => null,
                             'type'     => 'project_manager',
                         ]);

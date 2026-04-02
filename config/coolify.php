@@ -211,13 +211,13 @@ return [
         // Nginx configuration
         'nginx' => [
             'client_max_body_size' => env('COOLIFY_NGINX_MAX_BODY_SIZE', '35M'),
-            'upload_max_filesize' => env('COOLIFY_UPLOAD_MAX_FILESIZE', '30M'),
-            'post_max_size' => env('COOLIFY_POST_MAX_SIZE', '35M'),
+            'upload_max_filesize'  => env('COOLIFY_UPLOAD_MAX_FILESIZE', '30M'),
+            'post_max_size'        => env('COOLIFY_POST_MAX_SIZE', '35M'),
         ],
 
         // PHP runtime configuration
         'php' => [
-            'memory_limit' => env('COOLIFY_PHP_MEMORY_LIMIT', '256M'),
+            'memory_limit'       => env('COOLIFY_PHP_MEMORY_LIMIT', '256M'),
             'max_execution_time' => env('COOLIFY_PHP_MAX_EXECUTION_TIME', 60),
         ],
     ],

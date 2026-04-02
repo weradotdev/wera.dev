@@ -78,7 +78,7 @@ class DeveloperPanelProvider extends PanelProvider
                         return User::query()->create([
                             'name'     => $oauthUser->getName() ?? $oauthUser->getEmail(),
                             'email'    => $oauthUser->getEmail(),
-                            'phone'    => 'oauth-' . $provider . '-' . $oauthUser->getId(),
+                            'phone'    => 'oauth-'.$provider.'-'.$oauthUser->getId(),
                             'password' => null,
                             'type'     => 'developer',
                         ]);

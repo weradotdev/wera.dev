@@ -42,7 +42,7 @@ class MeetingReminderNotification extends Notification implements ShouldQueue
             ->line("Your meeting **{$this->meeting->title}** is starting {$label}.");
 
         if ($this->meeting->start_at) {
-            $message->line('Scheduled for: ' . $this->meeting->start_at->format('D, M j Y g:i A'));
+            $message->line('Scheduled for: '.$this->meeting->start_at->format('D, M j Y g:i A'));
         }
 
         return $message;
@@ -71,10 +71,10 @@ class MeetingReminderNotification extends Notification implements ShouldQueue
     {
         $label = $this->label();
 
-        return (new FcmMessage(notification: new FcmNotification(
+        return new FcmMessage(notification: new FcmNotification(
             title: "Meeting starting {$label}",
             body: "\"{$this->meeting->title}\" starts {$label}.",
-        )));
+        ));
     }
 
     private function label(): string

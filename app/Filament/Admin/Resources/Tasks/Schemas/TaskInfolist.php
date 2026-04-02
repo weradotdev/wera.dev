@@ -3,7 +3,6 @@
 namespace App\Filament\Admin\Resources\Tasks\Schemas;
 
 use App\Filament\Admin\Resources\Projects\ProjectResource;
-use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
 use Filament\Infolists\Components\TextEntry;
@@ -18,11 +17,11 @@ class TaskInfolist
         return $schema
             ->components([
                 TextEntry::make('description')
-                ->hiddenLabel()
-                ->columnSpanFull(),
+                    ->hiddenLabel()
+                    ->columnSpanFull(),
                 TextEntry::make('project.name')
                     ->label('Project')
-                    ->url(fn(Task $record) => ProjectResource::getUrl('view', [
+                    ->url(fn (Task $record) => ProjectResource::getUrl('view', [
                         'tenant' => $record->workspace->slug,
                         'record' => $record->project->slug,
                     ])),
@@ -42,7 +41,7 @@ class TaskInfolist
                     ->dateTime()
                     ->placeholder('N/A'),
                 CommentsEntry::make('comments')
-                    ->mentionables(fn(Model $record) => User::query()->orderBy('name')->get())
+                    ->mentionables(fn (Model $record) => User::query()->orderBy('name')->get())
                     ->columnSpanFull(),
             ])
             ->columns(5);

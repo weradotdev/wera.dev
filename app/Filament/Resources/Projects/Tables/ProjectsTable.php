@@ -8,7 +8,6 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
-use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\ColumnManagerLayout;
@@ -52,7 +51,7 @@ class ProjectsTable
                     ->sortable(),
             ])
             ->columnManagerLayout(ColumnManagerLayout::Modal)
-            ->columnManagerTriggerAction(fn($action) => $action->slideOver())
+            ->columnManagerTriggerAction(fn ($action) => $action->slideOver())
             ->filters([
                 SelectFilter::make('status')
                     ->options([
@@ -65,7 +64,7 @@ class ProjectsTable
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make()
-                    ->visible(fn(Project $record) => filament()->auth()->id() === $record->user_id),
+                    ->visible(fn (Project $record) => filament()->auth()->id() === $record->user_id),
                 CommentsAction::make()
                     ->mentionables(User::query()->orderBy('name')->get()),
                 SubscriptionAction::make()

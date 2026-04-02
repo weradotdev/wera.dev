@@ -23,11 +23,11 @@ class WorkspaceResource extends JsonResource
             'created_at'  => $this->created_at?->toIso8601String(),
             'updated_at'  => $this->updated_at?->toIso8601String(),
 
-            'projects'       => ProjectResource::collection($this->whenLoaded('projects')),
-            'boards'         => BoardResource::collection($this->whenLoaded('boards')),
-            'tasks'          => TaskResource::collection($this->whenLoaded('tasks')),
-            'tickets'        => TicketResource::collection($this->whenLoaded('tickets')),
-            'users'          => UserResource::collection($this->whenLoaded('users')),
+            'projects'        => ProjectResource::collection($this->whenLoaded('projects')),
+            'boards'          => BoardResource::collection($this->whenLoaded('boards')),
+            'tasks'           => TaskResource::collection($this->whenLoaded('tasks')),
+            'tickets'         => TicketResource::collection($this->whenLoaded('tickets')),
+            'users'           => UserResource::collection($this->whenLoaded('users')),
             'workspace_users' => WorkspaceUserResource::collection($this->whenLoaded('workspaceUsers')),
         ];
     }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Board;
 use App\Models\Project;
 use App\Models\Task;
+use App\Models\User;
 use Dedoc\Scramble\Attributes\Group;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -16,15 +17,13 @@ class StatsController extends Controller
 {
     /**
      * Get stats based on user role.
-     *
-     * @return JsonResponse
      */
     public function make(Request $request, string $type = 'developer'): JsonResponse
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
 
-        if (!$user) {
+        if (! $user) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
@@ -41,19 +40,19 @@ class StatsController extends Controller
      * Tasks are classified by their board position within each project:
      *   last board = completed, first board = todo, anything in between = in progress.
      *
-     * @param  \App\Models\User  $user
+     * @param  User                 $user
      * @return array<string, mixed>
      */
     protected function developer($user): array
     {
         $tasks = Task::query()
-            ->whereHas('assignedUsers', fn($q) => $q->where('users.id', $user->id))
+            ->whereHas('assignedUsers', fn ($q) => $q->where('users.id', $user->id))
             ->get(['id', 'project_id', 'board_id', 'end_at']);
 
         $counts = $this->classifyByBoards($tasks);
 
         $activeProjects = Project::query()
-            ->whereHas('users', fn($q) => $q->where('users.id', $user->id))
+            ->whereHas('users', fn ($q) => $q->where('users.id', $user->id))
             ->count();
 
         return [
@@ -71,7 +70,7 @@ class StatsController extends Controller
     /**
      * Get owner/admin stats (workspace-wide metrics).
      *
-     * @param  \App\Models\User  $user
+     * @param  User                 $user
      * @return array<string, mixed>
      */
     protected function owner($user): array
@@ -117,7 +116,7 @@ class StatsController extends Controller
      * Classify a flat task collection by board position within each project.
      * Loads all relevant boards in a single query (no N+1).
      *
-     * @param  Collection<int, Task>  $tasks
+     * @param  Collection<int, Task>                                             $tasks
      * @return array{total: int, completed: int, in_progress: int, overdue: int}
      */
     protected function classifyByBoards(Collection $tasks): array
@@ -136,21 +135,21 @@ class StatsController extends Controller
             ->get(['id', 'project_id'])
             ->groupBy('project_id');
 
-        $total      = $tasks->count();
-        $completed  = 0;
+        $total = $tasks->count();
+        $completed = 0;
         $inProgress = 0;
-        $overdue    = 0;
+        $overdue = 0;
 
         foreach ($tasks as $task) {
             $boards = $boardsByProject->get($task->project_id);
 
-            if (!$boards || $boards->isEmpty()) {
+            if (! $boards || $boards->isEmpty()) {
                 continue;
             }
 
-            $lastBoardId  = $boards->last()->id;
+            $lastBoardId = $boards->last()->id;
             $firstBoardId = $boards->first()->id;
-            $isDone       = $task->board_id === $lastBoardId;
+            $isDone = $task->board_id === $lastBoardId;
 
             if ($isDone) {
                 $completed++;
@@ -158,7 +157,7 @@ class StatsController extends Controller
                 $inProgress++;
             }
 
-            if (!$isDone && $task->end_at && $task->end_at->isPast()) {
+            if (! $isDone && $task->end_at && $task->end_at->isPast()) {
                 $overdue++;
             }
         }
@@ -173,9 +172,6 @@ class StatsController extends Controller
 
     /**
      * Resolve which method to call based on user type.
-     *
-     * @param  string  $userType
-     * @return string
      */
     protected function resolveMethod(string $userType): string
     {
@@ -185,4 +181,3 @@ class StatsController extends Controller
         };
     }
 }
-

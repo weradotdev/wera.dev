@@ -5,8 +5,8 @@ namespace App\Filament\Admin\Pages\Tenancy;
 use App\Models\Workspace;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Pages\Tenancy\RegisterTenant as BaseRegisterTenant;
 use Filament\Schemas\Schema;
@@ -39,7 +39,7 @@ class RegisterTenant extends BaseRegisterTenant
                     ->default(null)
                     ->columnSpanFull(),
                 ColorPicker::make('color')
-                ->required(),
+                    ->required(),
                 FileUpload::make('image')
                     ->image()
                     ->disk('public')

@@ -15,55 +15,35 @@ return [
      */
     'api_domain' => env('API_DOMAIN', 'api.wera.dev'),
 
-    /*
-     * The path where your OpenAPI specification will be exported.
-     */
+    // The path where your OpenAPI specification will be exported.
     'export_path' => 'api.json',
 
     'info' => [
-        /*
-         * API version.
-         */
+        // API version.
         'version' => env('API_VERSION', '0.0.1'),
 
-        /*
-         * Description rendered on the home page of the API documentation (`/docs/api`).
-         */
+        // Description rendered on the home page of the API documentation (`/docs/api`).
         'description' => '',
     ],
 
-    /*
-     * Customize Stoplight Elements UI
-     */
+    // Customize Stoplight Elements UI
     'ui' => [
-        /*
-         * Define the title of the documentation's website. App name is used when this config is `null`.
-         */
+        // Define the title of the documentation's website. App name is used when this config is `null`.
         'title' => 'API Docs',
 
-        /*
-         * Define the theme of the documentation. Available options are `light`, `dark`, and `system`.
-         */
+        // Define the theme of the documentation. Available options are `light`, `dark`, and `system`.
         'theme' => 'light',
 
-        /*
-         * Hide the `Try It` feature. Enabled by default.
-         */
+        // Hide the `Try It` feature. Enabled by default.
         'hide_try_it' => false,
 
-        /*
-         * Hide the schemas in the Table of Contents. Enabled by default.
-         */
+        // Hide the schemas in the Table of Contents. Enabled by default.
         'hide_schemas' => false,
 
-        /*
-         * URL to an image that displays as a small square logo next to the title, above the table of contents.
-         */
+        // URL to an image that displays as a small square logo next to the title, above the table of contents.
         'logo' => '/favicon.png',
 
-        /*
-         * Use to fetch the credential policy for the Try It feature. Options are: omit, include (default), and same-origin
-         */
+        // Use to fetch the credential policy for the Try It feature. Options are: omit, include (default), and same-origin
         'try_it_credentials_policy' => 'include',
 
         /*

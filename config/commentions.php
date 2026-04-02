@@ -1,5 +1,11 @@
 <?php
 
+use App\Models\User;
+use Kirschbaum\Commentions\Comment;
+use Kirschbaum\Commentions\Listeners\SendUserMentionedNotification;
+use Kirschbaum\Commentions\Notifications\UserMentionedInComment;
+use Kirschbaum\Commentions\Policies\CommentPolicy;
+
 return [
     /*
     |--------------------------------------------------------------------------
@@ -7,8 +13,8 @@ return [
     |--------------------------------------------------------------------------
     */
     'tables' => [
-        'comments' => 'comments',
-        'comment_reactions' => 'comment_reactions',
+        'comments'              => 'comments',
+        'comment_reactions'     => 'comment_reactions',
         'comment_subscriptions' => 'comment_subscriptions',
     ],
 
@@ -18,7 +24,7 @@ return [
     |--------------------------------------------------------------------------
     */
     'commenter' => [
-        'model' => \App\Models\User::class,
+        'model' => User::class,
     ],
 
     /*
@@ -27,8 +33,8 @@ return [
     |--------------------------------------------------------------------------
     */
     'comment' => [
-        'model' => \Kirschbaum\Commentions\Comment::class,
-        'policy' => \Kirschbaum\Commentions\Policies\CommentPolicy::class,
+        'model'  => Comment::class,
+        'policy' => CommentPolicy::class,
     ],
 
     /*
@@ -52,7 +58,7 @@ return [
         'dispatch_as_mention' => env('COMMENTIONS_SUBSCRIPTIONS_DISPATCH_AS_MENTION', false),
         // Controls whether the subscribers list is shown in the sidebar UI
         'show_subscribers' => env('COMMENTIONS_SUBSCRIPTIONS_SHOW_SUBSCRIBERS', true),
-        'show_sidebar' => env('COMMENTIONS_SUBSCRIPTIONS_SHOW_SIDEBAR', false),
+        'show_sidebar'     => env('COMMENTIONS_SUBSCRIPTIONS_SHOW_SIDEBAR', false),
         // Automatically subscribe the author when they add a comment
         'auto_subscribe_on_comment' => env('COMMENTIONS_SUBSCRIPTIONS_AUTO_SUBSCRIBE_ON_COMMENT', true),
         // Automatically subscribe a user when they are mentioned in a comment
@@ -74,8 +80,8 @@ return [
 
             'channels' => explode(',', env('COMMENTIONS_NOTIFICATIONS_MENTIONS_CHANNELS', 'mail')),
 
-            'listener' => \Kirschbaum\Commentions\Listeners\SendUserMentionedNotification::class,
-            'notification' => \Kirschbaum\Commentions\Notifications\UserMentionedInComment::class,
+            'listener'     => SendUserMentionedNotification::class,
+            'notification' => UserMentionedInComment::class,
 
             'mail' => [
                 'subject' => env('COMMENTIONS_NOTIFICATIONS_MENTIONS_MAIL_SUBJECT', 'You were mentioned in a comment'),

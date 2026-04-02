@@ -1,10 +1,17 @@
 <?php
 
+use App\Providers\AppServiceProvider;
+use App\Providers\CoolifyServiceProvider;
+use App\Providers\EventServiceProvider;
+use App\Providers\Filament\AdminPanelProvider;
+use App\Providers\Filament\DeveloperPanelProvider;
+use App\Providers\Filament\DocsPanelProvider;
+
 return [
-    App\Providers\AppServiceProvider::class,
-    App\Providers\CoolifyServiceProvider::class,
-    App\Providers\EventServiceProvider::class,
-    App\Providers\Filament\AdminPanelProvider::class,
-    App\Providers\Filament\DeveloperPanelProvider::class,
-    App\Providers\Filament\DocsPanelProvider::class,
+    AppServiceProvider::class,
+    CoolifyServiceProvider::class,
+    EventServiceProvider::class,
+    AdminPanelProvider::class,
+    DeveloperPanelProvider::class,
+    DocsPanelProvider::class,
 ];

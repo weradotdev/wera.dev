@@ -37,7 +37,7 @@ class ProjectInfolist
                     ->collapsed()
                     ->columns(6)
                     ->columnSpanFull(),
-                Section::make(fn (Model $record) => 'Comments (' . $record->comments->count() . ')')
+                Section::make(fn (Model $record) => 'Comments ('.$record->comments->count().')')
                     ->schema([
                         CommentsEntry::make('comments')
                             ->mentionables(fn (Model $record) => User::query()->orderBy('name')->get())

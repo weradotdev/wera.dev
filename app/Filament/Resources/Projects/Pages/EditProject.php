@@ -32,7 +32,7 @@ class EditProject extends EditRecord
                     TextInput::make('title')
                         ->label('Meeting title')
                         ->required()
-                        ->default(fn () => $this->record->name . ' meeting')
+                        ->default(fn () => $this->record->name.' meeting')
                         ->maxLength(255),
                     DateTimePicker::make('started_at')
                         ->label('Start at')
@@ -50,18 +50,18 @@ class EditProject extends EditRecord
                                 ->orderBy('first_name')
                                 ->get(['users.id', 'first_name', 'last_name', 'email'])
                                 ->mapWithKeys(fn (User $user): array => [
-                                    $user->id => trim($user->first_name . ' ' . $user->last_name) . ' (' . $user->email . ')',
+                                    $user->id => trim($user->first_name.' '.$user->last_name).' ('.$user->email.')',
                                 ])
                                 ->all()
                         ),
                 ])
                 ->action(function (array $data): void {
                     $meeting = Meeting::query()->create([
-                        'project_id'   => $this->record->id,
-                        'user_id' => filament()->auth()->id(),
-                        'title'        => $data['title'],
-                        'start_at'     => $data['start_at'] ?? null,
-                        'end_at'       => $data['end_at'] ?? null,
+                        'project_id' => $this->record->id,
+                        'user_id'    => filament()->auth()->id(),
+                        'title'      => $data['title'],
+                        'start_at'   => $data['start_at'] ?? null,
+                        'end_at'     => $data['end_at'] ?? null,
                     ]);
 
                     $meeting->meetingUsers()->create([
@@ -82,9 +82,9 @@ class EditProject extends EditRecord
                     }
 
                     $this->redirect(MeetingResource::getUrl('go', [
-                        'tenant' => filament()->getTenant()?->slug,
+                        'tenant'  => filament()->getTenant()?->slug,
                         'project' => $this->record,
-                        'record' => $meeting,
+                        'record'  => $meeting,
                     ]), navigate: true);
                 }),
             Action::make('connectWhatsApp')
@@ -92,8 +92,8 @@ class EditProject extends EditRecord
                 ->icon('heroicon-m-qr-code')
                 ->modalHeading('Scan WhatsApp QR code')
                 ->modalDescription('Open WhatsApp on your phone, tap Menu → Linked devices → Link a device, then scan the QR code below.')
-                ->modalContent(fn(): View => view('filament.whatsapp-qr-modal', [
-                    'sessionId' => 'project-' . $this->record->id,
+                ->modalContent(fn (): View => view('filament.whatsapp-qr-modal', [
+                    'sessionId' => 'project-'.$this->record->id,
                     'projectId' => $this->record->id,
                 ]))
                 ->modalSubmitAction(false)

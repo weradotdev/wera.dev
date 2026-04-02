@@ -54,8 +54,8 @@ class BoardResource extends Resource
     {
         return [
             'create' => CreateBoard::route('/create'),
-            'view' => ViewBoard::route('/{record}'),
-            'edit' => EditBoard::route('/{record}/edit'),
+            'view'   => ViewBoard::route('/{record}'),
+            'edit'   => EditBoard::route('/{record}/edit'),
         ];
     }
 }

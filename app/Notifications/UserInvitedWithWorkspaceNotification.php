@@ -58,7 +58,7 @@ class UserInvitedWithWorkspaceNotification extends Notification implements Shoul
     public function toArray(User $notifiable): array
     {
         return [
-            'workspace_id' => $this->workspace->getKey(),
+            'workspace_id'   => $this->workspace->getKey(),
             'workspace_name' => $this->workspace->name,
         ];
     }

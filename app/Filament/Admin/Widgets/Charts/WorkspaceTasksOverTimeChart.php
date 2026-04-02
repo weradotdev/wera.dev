@@ -60,7 +60,7 @@ class WorkspaceTasksOverTimeChart extends ChartWidget
     }
 
     /**
-     * @return array{0: \Illuminate\Support\Carbon, 1: \Illuminate\Support\Carbon}
+     * @return array{0: Carbon, 1: Carbon}
      */
     private function getFilterDateRange(): array
     {

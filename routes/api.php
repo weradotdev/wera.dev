@@ -5,16 +5,16 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BoardController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PlanController;
-use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectCommentController;
+use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\StatsController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\TaskUserController;
 use App\Http\Controllers\WorkspaceController;
 use App\Services\WhatsAppCommandHandler;
 use Illuminate\Http\Request;
-use Orion\Facades\Orion;
 use Illuminate\Support\Facades\Route;
+use Orion\Facades\Orion;
 
 Route::domain(env('API_DOMAIN', 'api.wera.dev'))
     ->as('api.')
@@ -77,8 +77,8 @@ Route::domain(env('API_DOMAIN', 'api.wera.dev'))
                 abort(401);
             }
             $sessionId = $request->input('session_id');
-            $from      = $request->input('from', '');
-            $message   = $request->input('message', '');
+            $from = $request->input('from', '');
+            $message = $request->input('message', '');
             if (blank($sessionId) || blank($from)) {
                 abort(422, 'session_id and from required');
             }
@@ -96,7 +96,7 @@ Route::domain(env('API_DOMAIN', 'api.wera.dev'))
             if (blank($sessionId)) {
                 abort(422, 'session_id required');
             }
-            $qr        = $request->input('qr');
+            $qr = $request->input('qr');
             $connected = (bool) $request->input('connected', false);
             event(new WhatsAppConnectionUpdate($sessionId, $qr, $connected));
 

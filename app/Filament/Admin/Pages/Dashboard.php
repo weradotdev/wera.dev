@@ -8,6 +8,7 @@ use App\Filament\Admin\Widgets\AdminStatsOverwiew;
 use App\Filament\Widgets\TasksCalendarWidget;
 use BackedEnum;
 use Filament\Actions\Action;
+use Illuminate\Contracts\Support\Htmlable;
 
 class Dashboard extends \Filament\Pages\Dashboard
 {
@@ -38,14 +39,14 @@ class Dashboard extends \Filament\Pages\Dashboard
         ];
     }
 
-    public function getTitle(): string|\Illuminate\Contracts\Support\Htmlable
+    public function getTitle(): string|Htmlable
     {
         $user = auth()->user();
 
         return "Welcome back, {$user->first_name}!";
     }
 
-    public function getSubheading(): string|\Illuminate\Contracts\Support\Htmlable|null
+    public function getSubheading(): string|Htmlable|null
     {
         $ws = filament()->getTenant();
 

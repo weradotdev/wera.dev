@@ -26,7 +26,7 @@ class ProjectUsersTable
                     ->label('Added on'),
             ])
             ->columnManagerLayout(ColumnManagerLayout::Modal)
-            ->columnManagerTriggerAction(fn($action) => $action->slideOver())
+            ->columnManagerTriggerAction(fn ($action) => $action->slideOver())
             ->filters([
                 //
             ])

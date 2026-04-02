@@ -5,17 +5,18 @@ namespace App\Models;
 use App\Observers\TaskObserver;
 use App\Traits\BelongsToProject;
 use App\Traits\BelongsToWorkspace;
+use Database\Factories\TaskFactory;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Kirschbaum\Commentions\Contracts\Commentable;
 use Kirschbaum\Commentions\HasComments;
 use Spatie\MediaLibrary\HasMedia;
@@ -24,7 +25,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 #[ObservedBy(TaskObserver::class)]
 class Task extends Model implements Commentable, HasMedia
 {
-    /** @use HasFactory<\Database\Factories\TaskFactory> */
+    /** @use HasFactory<TaskFactory> */
     use BelongsToProject;
 
     use BelongsToWorkspace;
@@ -86,11 +87,11 @@ class Task extends Model implements Commentable, HasMedia
         return Attribute::make(
             get: function (): int {
                 $checklist = $this->checklist ?? [];
-                if (empty($checklist) || !is_array($checklist)) {
+                if (empty($checklist) || ! is_array($checklist)) {
                     return 0;
                 }
-                $total          = count($checklist);
-                $completed      = $this->completed ?? [];
+                $total = count($checklist);
+                $completed = $this->completed ?? [];
                 $completedCount = is_array($completed) ? count($completed) : 0;
 
                 return $total > 0 ? (int) round(($completedCount / $total) * 100) : 0;
@@ -101,11 +102,11 @@ class Task extends Model implements Commentable, HasMedia
     protected function eventPeriod(): Attribute
     {
         return Attribute::make(
-            get: fn($value, array $attributes): array => [
+            get: fn ($value, array $attributes): array => [
                 'start' => $attributes['start_at'] ?? null,
                 'end'   => $attributes['end_at'] ?? null,
             ],
-            set: fn(?array $value): array => [
+            set: fn (?array $value): array => [
                 'start_at' => filled($value['start'] ?? null) ? Carbon::parse($value['start']) : null,
                 'end_at'   => filled($value['end'] ?? null) ? Carbon::parse($value['end']) : null,
             ],
@@ -147,7 +148,7 @@ class Task extends Model implements Commentable, HasMedia
     {
         $userId ??= Auth::id();
 
-        if ($userId === null) {
+        if (null === $userId) {
             return;
         }
 
@@ -159,7 +160,7 @@ class Task extends Model implements Commentable, HasMedia
      */
     #[Scope]
     private function forProject(Builder $query, int $projectId): void
-    {   
+    {
         $query->where('project_id', $projectId);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\BoardFactory;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Board extends Model
 {
-    /** @use HasFactory<\Database\Factories\BoardFactory> */
+    /** @use HasFactory<BoardFactory> */
     use HasFactory;
 
     /**
@@ -49,7 +50,7 @@ class Board extends Model
      */
     #[Scope]
     private function forProject(Builder $query, int $projectId): void
-    {   
+    {
         $query->where('project_id', $projectId);
     }
 }

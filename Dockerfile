@@ -38,3 +38,5 @@ COPY unit.json /docker-entrypoint.d/unit.json
 EXPOSE 80
 
 CMD ["unitd", "--no-daemon"]
+
+# ENTRYPOINT ["/entrypoint.sh"]

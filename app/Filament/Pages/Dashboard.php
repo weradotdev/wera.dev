@@ -5,6 +5,7 @@ namespace App\Filament\Pages;
 use App\Filament\Widgets\BoardsKanbanWidget;
 use App\Filament\Widgets\TasksCalendarWidget;
 use BackedEnum;
+use Illuminate\Contracts\Support\Htmlable;
 
 class Dashboard extends \Filament\Pages\Dashboard
 {
@@ -32,7 +33,7 @@ class Dashboard extends \Filament\Pages\Dashboard
         ];
     }
 
-    public function getTitle(): string|\Illuminate\Contracts\Support\Htmlable
+    public function getTitle(): string|Htmlable
     {
         $user = auth()->user();
 

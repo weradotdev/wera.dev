@@ -3,13 +3,14 @@
 namespace Database\Factories;
 
 use App\Models\Project;
+use App\Models\Task;
 use App\Models\TaskUser;
 use App\Models\User;
 use App\Models\Workspace;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Task>
+ * @extends Factory<Task>
  */
 class TaskFactory extends Factory
 {
@@ -21,16 +22,16 @@ class TaskFactory extends Factory
     public function definition(): array
     {
         return [
-            'workspace_id'     => Workspace::factory(),
-            'project_id'       => Project::factory(),
-            'user_id'          => User::factory(),
-            'board_id' => fn (array $attributes) => Project::find($attributes['project_id'])?->boards()->first()?->id,
-            'title'            => ucfirst($this->faker->words(4, true)),
-            'description'      => $this->faker->optional()->paragraph(),
-            'priority'         => $this->faker->randomElement(['low', 'medium', 'high']),
-            'start_at'         => $this->faker->optional()->dateTimeBetween('-2 weeks', '+2 weeks'),
-            'end_at'           => $this->faker->optional()->dateTimeBetween('+2 weeks', '+6 weeks'),
-            'position'         => $this->faker->numberBetween(0, 50),
+            'workspace_id' => Workspace::factory(),
+            'project_id'   => Project::factory(),
+            'user_id'      => User::factory(),
+            'board_id'     => fn (array $attributes) => Project::find($attributes['project_id'])?->boards()->first()?->id,
+            'title'        => ucfirst($this->faker->words(4, true)),
+            'description'  => $this->faker->optional()->paragraph(),
+            'priority'     => $this->faker->randomElement(['low', 'medium', 'high']),
+            'start_at'     => $this->faker->optional()->dateTimeBetween('-2 weeks', '+2 weeks'),
+            'end_at'       => $this->faker->optional()->dateTimeBetween('+2 weeks', '+6 weeks'),
+            'position'     => $this->faker->numberBetween(0, 50),
         ];
     }
 

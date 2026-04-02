@@ -36,7 +36,7 @@ class WorkspacesTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->columnManagerLayout(ColumnManagerLayout::Modal)
-            ->columnManagerTriggerAction(fn($action) => $action->slideOver())
+            ->columnManagerTriggerAction(fn ($action) => $action->slideOver())
             ->filters([
                 //
             ])

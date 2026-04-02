@@ -18,7 +18,7 @@ class WhatsAppConnectionUpdate implements ShouldBroadcast
     ) {}
 
     /**
-     * @return array<int, \Illuminate\Broadcasting\Channel>
+     * @return array<int, Channel>
      */
     public function broadcastOn(): array
     {

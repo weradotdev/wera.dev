@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Log;
 class WhatsApp
 {
     /**
-     * @param  object  $notifiable  Must have routeNotificationFor('whatsapp') and the notification must implement toWhatsApp()
+     * @param object $notifiable Must have routeNotificationFor('whatsapp') and the notification must implement toWhatsApp()
      */
     public function send(object $notifiable, Notification $notification): void
     {
@@ -56,9 +56,9 @@ class WhatsApp
             }
 
             Log::error('WhatsApp message not sent', [
-                'to'        => $jid,
-                'status'    => $response->status(),
-                'response'  => $response->body(),
+                'to'       => $jid,
+                'status'   => $response->status(),
+                'response' => $response->body(),
             ]);
         } catch (\Throwable $e) {
             Log::error('WhatsApp notification exception', [

@@ -54,7 +54,7 @@ class AdminOngoingProjects extends TableWidget
                 Action::make('view')
                     ->label('View')
                     ->icon('hugeicons-view')
-                    ->url(fn(Project $record) => ProjectResource::getUrl('view', [
+                    ->url(fn (Project $record) => ProjectResource::getUrl('view', [
                         'tenant' => $record->workspace->slug,
                         'record' => $record->slug,
                     ])),
@@ -66,7 +66,7 @@ class AdminOngoingProjects extends TableWidget
 
     private function getOngoingProjectsQuery(mixed $tenant): Builder
     {
-        if (!$tenant instanceof Workspace) {
+        if (! $tenant instanceof Workspace) {
             return Project::query()->whereRaw('1 = 0');
         }
 
@@ -76,8 +76,8 @@ class AdminOngoingProjects extends TableWidget
             ->withCount([
                 'boards',
                 'tasks',
-                'tasks as open_tasks_count' => fn(Builder $query) => $query
-                    ->whereHas('board', fn(Builder $boardQuery): Builder => $boardQuery->whereNotIn('name', ['Completed', 'Done'])),
+                'tasks as open_tasks_count' => fn (Builder $query) => $query
+                    ->whereHas('board', fn (Builder $boardQuery): Builder => $boardQuery->whereNotIn('name', ['Completed', 'Done'])),
             ]);
     }
 }

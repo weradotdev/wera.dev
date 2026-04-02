@@ -9,6 +9,8 @@ use App\Filament\Admin\Widgets\Charts\WorkspaceTasksOverTimeChart;
 use App\Filament\Admin\Widgets\Charts\WorkspaceTasksStatusChart;
 use BackedEnum;
 use Filament\Pages\Dashboard;
+use Filament\Widgets\Widget;
+use Filament\Widgets\WidgetConfiguration;
 
 class Analytics extends Dashboard
 {
@@ -23,7 +25,7 @@ class Analytics extends Dashboard
     protected static ?string $title = 'Analytics';
 
     /**
-     * @return array<class-string<\Filament\Widgets\Widget>|\Filament\Widgets\WidgetConfiguration>
+     * @return array<class-string<Widget>|WidgetConfiguration>
      */
     public function getWidgets(): array
     {

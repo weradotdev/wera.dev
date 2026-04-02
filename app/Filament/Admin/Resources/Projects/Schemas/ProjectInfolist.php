@@ -36,17 +36,17 @@ class ProjectInfolist
                             ->icon('hugeicons-source-code')
                             ->schema([
                                 CodeEntry::make('embed_code')
-                                ->hiddenLabel()
-                                    ->default(fn(Project $record) => '<script> 
+                                    ->hiddenLabel()
+                                    ->default(fn (Project $record) => '<script> 
 window.WERA_CHAT_EMBED_CONFIG = { 
-    iframeUrl: "' . str_replace('ws.', '', asset(route('ticket', ['workspace' => $record->workspace->slug, 'project' => $record->slug], false))) . '", 
-    buttonBackground: ' . json_encode($record->color ?: '#2d89ef') . ', 
+    iframeUrl: "'.str_replace('ws.', '', asset(route('ticket', ['workspace' => $record->workspace->slug, 'project' => $record->slug], false))).'", 
+    buttonBackground: '.json_encode($record->color ?: '#2d89ef').', 
     width: 420, 
     height: 640, 
     position: "bottom-left" 
 };
 </script>
-<script src=' .str_replace('ws.', '', rtrim(asset('embed-chat.js'))) . '></script>')
+<script src='.str_replace('ws.', '', rtrim(asset('embed-chat.js'))).'></script>')
                                     ->copyable()
                                     ->copyMessage('Iframe embed code copied')
                                     ->copyMessageDuration(1500)
@@ -60,7 +60,7 @@ window.WERA_CHAT_EMBED_CONFIG = {
                     ->columns(5)
                     ->columnSpanFull(),
                 CommentsEntry::make('comments')
-                    ->mentionables(fn(Model $record) => User::query()->orderBy('name')->get())
+                    ->mentionables(fn (Model $record) => User::query()->orderBy('name')->get())
                     ->columnSpanFull(),
             ]);
     }

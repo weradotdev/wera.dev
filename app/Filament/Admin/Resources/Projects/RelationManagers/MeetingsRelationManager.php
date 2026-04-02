@@ -43,7 +43,7 @@ class MeetingsRelationManager extends RelationManager
                     ->icon('heroicon-m-video-camera')
                     ->url(fn ($record): string => MeetingResource::getUrl('go', [
                         'project' => $this->getOwnerRecord(),
-                        'record' => $record,
+                        'record'  => $record,
                     ])),
             ]);
     }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\WorkspaceFactory;
 use Filament\Models\Contracts\HasAvatar;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,7 +13,7 @@ use Illuminate\Support\Facades\Storage;
 
 class Workspace extends Model implements HasAvatar
 {
-    /** @use HasFactory<\Database\Factories\WorkspaceFactory> */
+    /** @use HasFactory<WorkspaceFactory> */
     use HasFactory;
 
     /**

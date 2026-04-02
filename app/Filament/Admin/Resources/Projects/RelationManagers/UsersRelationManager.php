@@ -23,7 +23,7 @@ class UsersRelationManager extends RelationManager
                 AttachAction::make()
                     ->multiple()
                     ->recordSelectSearchColumns(['name', 'email', 'phone'])
-                    ->schema(fn(AttachAction $action): array => [
+                    ->schema(fn (AttachAction $action): array => [
                         $action->getRecordSelect(),
                         Select::make('role')
                             ->options([
@@ -33,6 +33,10 @@ class UsersRelationManager extends RelationManager
                             ])
                             ->required(),
                     ]),
+            ])
+            ->recordActions([
+                AttachAction::make(),
             ]);
+
     }
 }

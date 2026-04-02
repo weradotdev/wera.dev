@@ -31,13 +31,13 @@ class GetProjectTasks implements Tool
         $tasks = $query->limit($limit)->get();
 
         $data = $tasks->map(fn (Task $task): array => [
-            'id'         => $task->id,
-            'title'      => $task->title,
-            'priority'   => $task->priority,
-            'progress'   => $task->progress,
-            'start_at'   => $task->start_at?->toIso8601String(),
-            'end_at'     => $task->end_at?->toIso8601String(),
-            'assignees'  => $task->assignedUsers->pluck('name')->all(),
+            'id'        => $task->id,
+            'title'     => $task->title,
+            'priority'  => $task->priority,
+            'progress'  => $task->progress,
+            'start_at'  => $task->start_at?->toIso8601String(),
+            'end_at'    => $task->end_at?->toIso8601String(),
+            'assignees' => $task->assignedUsers->pluck('name')->all(),
         ])->all();
 
         return (string) json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
@@ -48,7 +48,7 @@ class GetProjectTasks implements Tool
         return [
             'project_id' => $schema->integer()->description('The project ID.')->required(),
             'priority'   => $schema->string()->description('Optional: low, medium, high.'),
-            'limit'     => $schema->integer()->description('Max number of tasks to return (default 100).'),
+            'limit'      => $schema->integer()->description('Max number of tasks to return (default 100).'),
         ];
     }
 }

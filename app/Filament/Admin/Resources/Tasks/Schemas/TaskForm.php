@@ -84,8 +84,8 @@ class TaskForm
                                     ->multiple()
                                     ->reorderable()
                                     ->columnSpanFull(),
-                                    DatePicker::make('due_at')
-                                        ->label('Due Date'),
+                                DatePicker::make('due_at')
+                                    ->label('Due Date'),
                                 DateRangePicker::make('event_period')
                                     ->label('Schedule')
                                     ->withTime()

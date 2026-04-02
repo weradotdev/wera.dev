@@ -14,24 +14,24 @@ class TaskInfolist
         return $schema
             ->components([
                 TextEntry::make('description')
-                ->hiddenLabel()
+                    ->hiddenLabel()
                     ->columnSpanFull(),
-                        TextEntry::make('project.name')
-                            ->label('Project'),
-                        TextEntry::make('board.name')
-                            ->label('Status'),
-                        TextEntry::make('assignedUsers.name')
-                            ->label('Assigned')
-                            ->listWithLineBreaks(),
-                        TextEntry::make('priority')
-                            ->badge(),
-                        TextEntry::make('due_at')
-                            ->dateTime(),
-                        TextEntry::make('start_at')
-                            ->dateTime(),
-                        TextEntry::make('end_at')
-                            ->dateTime(),
-                            CommentsEntry::make('comments')
+                TextEntry::make('project.name')
+                    ->label('Project'),
+                TextEntry::make('board.name')
+                    ->label('Status'),
+                TextEntry::make('assignedUsers.name')
+                    ->label('Assigned')
+                    ->listWithLineBreaks(),
+                TextEntry::make('priority')
+                    ->badge(),
+                TextEntry::make('due_at')
+                    ->dateTime(),
+                TextEntry::make('start_at')
+                    ->dateTime(),
+                TextEntry::make('end_at')
+                    ->dateTime(),
+                CommentsEntry::make('comments')
                     ->mentionables(User::query()->orderBy('name')->get())
                     ->columnSpanFull(),
             ])

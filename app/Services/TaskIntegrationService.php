@@ -102,7 +102,7 @@ class TaskIntegrationService
      * Notify via project-configured channels. Channel targets (chat_id, phone, channel, etc.)
      * can be passed in $channelTargets; otherwise falls back to project settings or user data.
      *
-     * @param array<int, string> $channels
+     * @param array<int, string>                                          $channels
      * @param array{telegram?: string, slack?: string, whatsapp?: string} $channelTargets Optional. Pass the correct id for each channel (e.g. telegram chat_id, whatsapp phone/jid, slack channel). Separate notifications can pass these when dispatching.
      */
     protected function notifyUserViaChannels(Project $project, User $user, string $message, array $channels, array $channelTargets = []): void

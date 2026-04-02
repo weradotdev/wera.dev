@@ -13,6 +13,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Resources\Pages\ViewRecord;
+use Illuminate\Contracts\Support\Htmlable;
 
 class ViewUser extends ViewRecord
 {
@@ -32,7 +33,7 @@ class ViewUser extends ViewRecord
                             'database' => 'Database',
                             'fcm'      => 'Push Notifications',
                             'sms'      => 'SMS',
-                            'mail'    => 'Email',
+                            'mail'     => 'Email',
                         ])
                         ->multiple()
                         ->inline(),
@@ -55,7 +56,7 @@ class ViewUser extends ViewRecord
         ];
     }
 
-    public function getTitle(): string|\Illuminate\Contracts\Support\Htmlable
+    public function getTitle(): string|Htmlable
     {
         return $this->record->name;
     }

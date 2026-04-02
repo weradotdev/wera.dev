@@ -19,6 +19,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Schemas\Schema;
+use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Livewire\Component;
@@ -113,12 +114,12 @@ class AddTaskKanbanForm extends Component implements HasActions, HasForms
 
         if ($this->isWorkspacePanel()) {
             $workspace = Filament::getTenant();
-            $schema[]  = Select::make('assigned_user_ids')
+            $schema[] = Select::make('assigned_user_ids')
                 ->label('Assigned users')
                 ->options(
                     $workspace instanceof Workspace
                     ? User::query()
-                        ->whereHas('workspaces', fn(Builder $q): Builder => $q->where('workspaces.id', $workspace->getKey()))
+                        ->whereHas('workspaces', fn (Builder $q): Builder => $q->where('workspaces.id', $workspace->getKey()))
                         ->orderBy('name')
                         ->pluck('name', 'id')
                     : []
@@ -133,24 +134,24 @@ class AddTaskKanbanForm extends Component implements HasActions, HasForms
 
     protected function isWorkspacePanel(): bool
     {
-        return Filament::getCurrentPanel()?->getId() === 'admin';
+        return 'admin' === Filament::getCurrentPanel()?->getId();
     }
 
     /**
-     * @param  mixed  $checklist  Repeater state (array of ['item' => string] or list of strings)
+     * @param  mixed              $checklist Repeater state (array of ['item' => string] or list of strings)
      * @return array<int, string>
      */
     protected function normalizeChecklistToItems(mixed $checklist): array
     {
-        if (!is_array($checklist)) {
+        if (! is_array($checklist)) {
             return [];
         }
 
         $items = [];
         foreach ($checklist as $row) {
-            if (is_array($row) && !empty($row['item'] ?? null)) {
+            if (is_array($row) && ! empty($row['item'] ?? null)) {
                 $items[] = (string) $row['item'];
-            } elseif (is_string($row) && trim($row) !== '') {
+            } elseif (is_string($row) && '' !== trim($row)) {
                 $items[] = trim($row);
             }
         }
@@ -160,7 +161,7 @@ class AddTaskKanbanForm extends Component implements HasActions, HasForms
 
     protected function getFormModel(): Model
     {
-        $task           = new Task;
+        $task = new Task;
         $task->board_id = $this->boardId;
         $task->priority = 'medium';
 
@@ -171,14 +172,14 @@ class AddTaskKanbanForm extends Component implements HasActions, HasForms
     {
         $project = $this->resolveProject();
 
-        if (!$project || !$this->boardId) {
+        if (! $project || ! $this->boardId) {
             return;
         }
 
         $data = $this->form->getState();
 
         $boardExists = $project->boards()->whereKey($this->boardId)->exists();
-        if (!$boardExists) {
+        if (! $boardExists) {
             return;
         }
 
@@ -186,7 +187,7 @@ class AddTaskKanbanForm extends Component implements HasActions, HasForms
             ->where('board_id', $this->boardId)
             ->max('position')) + 1;
 
-        $checklist      = $data['checklist'] ?? [];
+        $checklist = $data['checklist'] ?? [];
         $checklistItems = $this->normalizeChecklistToItems($checklist);
 
         $task = Task::query()->create([
@@ -247,13 +248,13 @@ class AddTaskKanbanForm extends Component implements HasActions, HasForms
         $projectQuery = Project::query()->with('boards');
 
         return match (true) {
-            $tenant instanceof Project => $projectQuery->whereKey($tenant)->first(),
+            $tenant instanceof Project   => $projectQuery->whereKey($tenant)->first(),
             $tenant instanceof Workspace => $projectQuery->whereBelongsTo($tenant)->latest('id')->first(),
-            default => null,
+            default                      => null,
         };
     }
 
-    public function render(): \Illuminate\Contracts\View\View
+    public function render(): View
     {
         return view('filament.widgets.add-task-kanban-form');
     }

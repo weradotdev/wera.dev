@@ -71,6 +71,7 @@ class Meeting extends Model
 
     /**
      * Summary of project
+     *
      * @return BelongsTo<Project, Meeting>
      */
     public function project(): BelongsTo
@@ -80,6 +81,7 @@ class Meeting extends Model
 
     /**
      * Summary of host
+     *
      * @return BelongsTo<User, Meeting>
      */
     public function host(): BelongsTo
@@ -94,6 +96,7 @@ class Meeting extends Model
 
     /**
      * Summary of attendees
+     *
      * @return BelongsToMany<User, Meeting>
      */
     public function attendees(): BelongsToMany

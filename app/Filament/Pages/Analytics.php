@@ -7,6 +7,8 @@ use App\Filament\Widgets\Charts\MyTasksOverTimeChart;
 use App\Filament\Widgets\Charts\MyTasksStatusChart;
 use BackedEnum;
 use Filament\Pages\Dashboard;
+use Filament\Widgets\Widget;
+use Filament\Widgets\WidgetConfiguration;
 
 class Analytics extends Dashboard
 {
@@ -21,7 +23,7 @@ class Analytics extends Dashboard
     protected static ?int $navigationSort = 10;
 
     /**
-     * @return array<class-string<\Filament\Widgets\Widget>|\Filament\Widgets\WidgetConfiguration>
+     * @return array<class-string<Widget>|WidgetConfiguration>
      */
     public function getWidgets(): array
     {

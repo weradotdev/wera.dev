@@ -13,7 +13,7 @@ class TicketInfolist
         return $schema
             ->components([
                 TextEntry::make('description')
-                ->hiddenLabel()
+                    ->hiddenLabel()
                     ->columnSpanFull(),
                 TextEntry::make('workspace.name')
                     ->label('Workspace'),

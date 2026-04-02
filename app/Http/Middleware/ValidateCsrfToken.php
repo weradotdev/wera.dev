@@ -9,7 +9,6 @@ class ValidateCsrfToken extends \Illuminate\Foundation\Http\Middleware\ValidateC
     /**
      * Check if the CSRF tokens match for the given request.
      *
-     * @param  mixed  $request
      *
      * @return bool True if the CSRF tokens match, false otherwise.
      */
@@ -20,16 +19,12 @@ class ValidateCsrfToken extends \Illuminate\Foundation\Http\Middleware\ValidateC
 
     /**
      * Get Livewire component path from the request.
-     *
-     * @param  mixed  $request
-     *
-     * @return string|null
      */
     protected function getLivewireComponentPath(mixed $request): ?string
     {
         $components = $request->input('components')[0] ?? [];
-        $snapshot   = json_decode($components['snapshot'] ?? '{}', true);
-        $memo       = $snapshot['memo'] ?? [];
+        $snapshot = json_decode($components['snapshot'] ?? '{}', true);
+        $memo = $snapshot['memo'] ?? [];
 
         return $memo['name'] ?? null;
     }

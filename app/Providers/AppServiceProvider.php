@@ -8,27 +8,28 @@ use App\Events\DevelopmentPlanGenerated;
 use App\Events\GenerateDevelopmentPlanRequested;
 use App\Events\GenerateProgressReportRequested;
 use App\Events\ProgressReportGenerated;
+use App\Filament\Widgets\AddTaskKanbanForm;
 use App\Http\Scramble\OrionResponseOperationExtension;
 use App\Listeners\PromptDevelopmentPlanAgent;
 use App\Listeners\PromptProgressReportAgent;
+use App\Listeners\ShareProgressReportWithProjectUsers;
 use App\Listeners\StoreDevelopmentPlanRevision;
 use App\Models\User;
 use Dedoc\Scramble\Configuration\OperationTransformers;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Log;
-use App\Listeners\ShareProgressReportWithProjectUsers;
-use Filament\Pages\Page;
-use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Support\ServiceProvider;
-use Livewire\Livewire;
 use Dedoc\Scramble\Scramble;
 use Dedoc\Scramble\Support\Generator\OpenApi;
 use Dedoc\Scramble\Support\Generator\SecurityScheme;
 use Filament\Notifications\Notification as FilamentNotification;
+use Filament\Pages\Page;
+use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\ValidationException;
+use Livewire\Livewire;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -57,15 +58,15 @@ class AppServiceProvider extends ServiceProvider
 
         Livewire::component(
             'filament.widgets.add-task-kanban-form',
-            \App\Filament\Widgets\AddTaskKanbanForm::class
+            AddTaskKanbanForm::class
         );
 
-        Notification::extend('sms', fn () => new Sms());
-        Notification::extend('whatsapp', fn () => new WhatsApp());
+        Notification::extend('sms', fn () => new Sms);
+        Notification::extend('whatsapp', fn () => new WhatsApp);
 
         Gate::define('viewApiDocs', fn ($user) => true);
 
-        Gate::before(fn (User $user, string $ability) => $user->type == 'admin' ? true : null);
+        Gate::before(fn (User $user, string $ability) => 'admin' == $user->type ? true : null);
 
         // Gate::policy(Role::class, RolePolicy::class);
         // Gate::policy(Permission::class, PermissionPolicy::class);

@@ -15,7 +15,7 @@ class MyTasksOverTimeChart extends ChartWidget
     public ?string $filter = '12months';
 
     protected ?string $cachedFilter = null;
-    
+
     protected int|string|array $columnSpan = 'full';
 
     protected ?string $heading = 'My tasks over time';
@@ -59,7 +59,7 @@ class MyTasksOverTimeChart extends ChartWidget
     }
 
     /**
-     * @return array{0: \Illuminate\Support\Carbon, 1: \Illuminate\Support\Carbon}
+     * @return array{0: Carbon, 1: Carbon}
      */
     private function getFilterDateRange(): array
     {

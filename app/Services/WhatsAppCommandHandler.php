@@ -19,20 +19,20 @@ class WhatsAppCommandHandler
         $message = trim($message);
         $rest = preg_replace('/^wera\s*/i', '', $message);
         $rest = trim($rest);
-        $lower = $rest === '' ? '' : strtolower($rest);
+        $lower = '' === $rest ? '' : strtolower($rest);
 
-        if ($rest === '' || in_array($lower, ['help', 'commands', '?'], true)) {
+        if ('' === $rest || in_array($lower, ['help', 'commands', '?'], true)) {
             return $this->help();
         }
 
         $project = $this->resolveProject($sessionId);
         $user = $this->resolveUser($from);
 
-        if ($project === null) {
+        if (null === $project) {
             return "Unknown project. Session: {$sessionId}. Say *wera* for commands.";
         }
 
-        if (str_contains($lower, 'task') && (str_contains($lower, 'how many') || str_contains($lower, 'many') || $lower === 'tasks' || $lower === 'my tasks')) {
+        if (str_contains($lower, 'task') && (str_contains($lower, 'how many') || str_contains($lower, 'many') || 'tasks' === $lower || 'my tasks' === $lower)) {
             return $this->myTasksCount($project, $user);
         }
 
@@ -49,7 +49,7 @@ class WhatsAppCommandHandler
 
     public function help(): string
     {
-        return <<<TEXT
+        return <<<'TEXT'
 *Wera* – Reply only to messages that *start with wera*. Here’s what I can do:
 
 • *wera* or *wera help* – Show this message
@@ -73,7 +73,7 @@ TEXT;
     protected function resolveUser(string $from): ?User
     {
         $phone = preg_replace('/\D/', '', $from);
-        if ($phone === '') {
+        if ('' === $phone) {
             return null;
         }
 
@@ -84,8 +84,8 @@ TEXT;
 
     protected function myTasksCount(Project $project, ?User $user): string
     {
-        if ($user === null) {
-            return "I can’t find your account for this number. Add this phone in your profile to see your tasks. Say *wera* for commands.";
+        if (null === $user) {
+            return 'I can’t find your account for this number. Add this phone in your profile to see your tasks. Say *wera* for commands.';
         }
 
         $count = Task::query()
@@ -98,8 +98,8 @@ TEXT;
 
     protected function overdueCount(Project $project, ?User $user): string
     {
-        if ($user === null) {
-            return "Add this phone in your profile to see your overdue tasks. Say *wera* for commands.";
+        if (null === $user) {
+            return 'Add this phone in your profile to see your overdue tasks. Say *wera* for commands.';
         }
 
         $count = Task::query()
@@ -114,8 +114,8 @@ TEXT;
 
     protected function projectStatus(Project $project, ?User $user, string $message): string
     {
-        if ($user !== null && ! $user->projects()->whereKey($project->id)->exists()) {
-            return "You don’t have access to this project.";
+        if (null !== $user && ! $user->projects()->whereKey($project->id)->exists()) {
+            return 'You don’t have access to this project.';
         }
 
         $total = Task::query()->where('project_id', $project->id)->count();
@@ -137,7 +137,7 @@ TEXT;
             "Total tasks: {$total}",
             "Overdue: {$overdue}",
         ];
-        if ($user !== null) {
+        if (null !== $user) {
             $lines[] = "Your tasks: {$assignedToUser}";
         }
 

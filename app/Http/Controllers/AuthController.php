@@ -26,7 +26,7 @@ class AuthController extends Controller
     public function login(LoginRequest $request)
     {
         $identifier = $request->input('email');
-        $column     = filter_var($identifier, FILTER_VALIDATE_EMAIL) ? 'email' : 'phone';
+        $column = filter_var($identifier, FILTER_VALIDATE_EMAIL) ? 'email' : 'phone';
 
         /** @var User|null $user */
         $user = User::firstWhere($column, $identifier);
@@ -55,8 +55,6 @@ class AuthController extends Controller
      * Register a new user.
      *
      * @unauthenticated
-     *
-     * @return JsonResponse
      */
     public function register(RegisterRequest $request): JsonResponse
     {
@@ -84,8 +82,6 @@ class AuthController extends Controller
 
     /**
      * Logout a user.
-     *
-     * @return JsonResponse
      */
     public function logout(Request $request): JsonResponse
     {
@@ -101,8 +97,6 @@ class AuthController extends Controller
 
     /**
      * Stream token (stub for call/stream integrations).
-     *
-     * @return JsonResponse
      */
     public function streamToken(Request $request): JsonResponse
     {

@@ -6,6 +6,7 @@ use App\Filament\Admin\Resources\Tickets\TicketResource;
 use App\Models\Task;
 use App\Models\Ticket;
 use App\Models\User;
+use App\Services\TaskIntegrationService;
 use CodeWithKyrian\FilamentDateRange\Forms\Components\DateRangePicker;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
@@ -53,7 +54,7 @@ class TicketsTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->columnManagerLayout(ColumnManagerLayout::Modal)
-            ->columnManagerTriggerAction(fn($action) => $action->slideOver())
+            ->columnManagerTriggerAction(fn ($action) => $action->slideOver())
             ->recordActions([
                 Action::make('assign')
                     ->label('Assign to users')
@@ -113,27 +114,27 @@ class TicketsTable
             $board = $record->project->boards()->orderBy('position')->first();
 
             $task = Task::query()->create([
-                'workspace_id'     => $record->workspace_id,
-                'project_id'       => $record->project_id,
-                'user_id'          => filament()->auth()->id(),
-                'board_id' => $board?->id,
-                'ticket_id'        => $record->id,
-                'title'            => $record->title,
-                'description'      => $record->description,
-                'priority'         => 'medium',
-                'start_at'         => $startAt,
-                'end_at'           => $endAt,
+                'workspace_id' => $record->workspace_id,
+                'project_id'   => $record->project_id,
+                'user_id'      => filament()->auth()->id(),
+                'board_id'     => $board?->id,
+                'ticket_id'    => $record->id,
+                'title'        => $record->title,
+                'description'  => $record->description,
+                'priority'     => 'medium',
+                'start_at'     => $startAt,
+                'end_at'       => $endAt,
             ]);
 
             $task->assignedUsers()->sync($userIds);
             $record->update(['status' => 'assigned']);
             if (! empty($userIds)) {
-                app(\App\Services\TaskIntegrationService::class)->notifyNewAssignees($task, $userIds);
+                app(TaskIntegrationService::class)->notifyNewAssignees($task, $userIds);
             }
         } else {
             $record->task->assignedUsers()->sync($userIds);
             if (! empty($userIds)) {
-                app(\App\Services\TaskIntegrationService::class)->notifyNewAssignees($record->task, $userIds);
+                app(TaskIntegrationService::class)->notifyNewAssignees($record->task, $userIds);
             }
             if (null !== $startAt || null !== $endAt) {
                 $record->task->update(array_filter([
@@ -147,7 +148,7 @@ class TicketsTable
     /**
      * @param array{start?: string|null, end?: string|null}|string|null $schedule
      */
-    private static function parseScheduleStart(array|string|null $schedule): ?\Illuminate\Support\Carbon
+    private static function parseScheduleStart(array|string|null $schedule): ?Carbon
     {
         if (null === $schedule) {
             return null;
@@ -161,7 +162,7 @@ class TicketsTable
     /**
      * @param array{start?: string|null, end?: string|null}|string|null $schedule
      */
-    private static function parseScheduleEnd(array|string|null $schedule): ?\Illuminate\Support\Carbon
+    private static function parseScheduleEnd(array|string|null $schedule): ?Carbon
     {
         if (null === $schedule || ! is_array($schedule)) {
             return null;

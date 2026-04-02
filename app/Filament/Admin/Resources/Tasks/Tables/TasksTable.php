@@ -6,6 +6,7 @@ use App\Filament\Admin\Resources\Tasks\Schemas\TaskForm;
 use App\Filament\Admin\Resources\Tasks\TaskResource;
 use App\Models\Task;
 use App\Models\User;
+use App\Services\TaskIntegrationService;
 use CodeWithKyrian\FilamentDateRange\Forms\Components\DateRangePicker;
 use CodeWithKyrian\FilamentDateRange\Tables\Filters\DateRangeFilter;
 use Filament\Actions\Action;
@@ -44,13 +45,13 @@ class TasksTable
                 TextColumn::make('priority')
                     ->searchable()
                     ->badge()
-                    ->color(fn(string $state): string => match ($state) {
-                        'low' => 'gray',
+                    ->color(fn (string $state): string => match ($state) {
+                        'low'    => 'gray',
                         'medium' => 'warning',
-                        'high' => 'danger',
+                        'high'   => 'danger',
                     }),
                 TextColumn::make('due_at')
-                ->label('Due date')
+                    ->label('Due date')
                     ->dateTime()
                     ->sortable(),
                 TextColumn::make('start_at')
@@ -75,13 +76,13 @@ class TasksTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->columnManagerLayout(ColumnManagerLayout::Modal)
-            ->columnManagerTriggerAction(fn($action) => $action->slideOver())
+            ->columnManagerTriggerAction(fn ($action) => $action->slideOver())
             ->filters([
                 DateRangeFilter::make('schedule')
                     ->label('Schedule')
                     ->withTime()
                     ->modifyQueryUsing(function (Builder $query, $start, $end): void {
-                        if (!$start && !$end) {
+                        if (! $start && ! $end) {
                             return;
                         }
 
@@ -117,7 +118,7 @@ class TasksTable
                     ->label('Assign')
                     ->icon('heroicon-o-user-plus')
                     ->color('primary')
-                    ->schema(fn(Task $record): array => [
+                    ->schema(fn (Task $record): array => [
                         Repeater::make('assignments')
                             ->label('Assigned users')
                             ->schema([
@@ -125,7 +126,7 @@ class TasksTable
                                     ->label('User')
                                     ->options(
                                         User::query()
-                                            ->whereHas('workspaces', fn(Builder $q) => $q->where('workspaces.id', $record->workspace_id))
+                                            ->whereHas('workspaces', fn (Builder $q) => $q->where('workspaces.id', $record->workspace_id))
                                             ->orderBy('name')
                                             ->pluck('name', 'id')
                                     )
@@ -138,7 +139,7 @@ class TasksTable
                                     ->default('developer'),
                             ])
                             ->columns(2)
-                            ->default(fn() => $record->assignedUsers->map(fn($user) => [
+                            ->default(fn () => $record->assignedUsers->map(fn ($user) => [
                                 'user_id' => $user->id,
                                 'role'    => $user->pivot->role ?? 'developer',
                             ])->toArray()),
@@ -148,14 +149,14 @@ class TasksTable
                             ->singleField()
                             ->format('Y-m-d H:i:s')
                             ->displayFormat('M j, Y H:i')
-                            ->default(fn() => $record->start_at && $record->end_at
+                            ->default(fn () => $record->start_at && $record->end_at
                                 ? ['start' => $record->start_at->format('Y-m-d H:i:s'), 'end' => $record->end_at->format('Y-m-d H:i:s')]
                                 : null),
                     ])
                     ->action(function (Task $record, array $data): void {
                         static::assignUsers($record, $data['assignments'] ?? [], $data['schedule'] ?? null);
                     })
-                    ->successRedirectUrl(fn(Task $record) => TaskResource::getUrl('view', ['record' => $record])),
+                    ->successRedirectUrl(fn (Task $record) => TaskResource::getUrl('view', ['record' => $record])),
                 ViewAction::make(),
                 EditAction::make(),
                 CommentsAction::make()
@@ -179,18 +180,18 @@ class TasksTable
     public static function assignUsers(Task $record, array $assignments, array|string|null $schedule = null): void
     {
         $sync = collect($assignments)
-            ->filter(fn(array $a): bool => !empty($a['user_id']))
-            ->mapWithKeys(fn(array $a): array => [(int) $a['user_id'] => ['role' => $a['role'] ?? 'developer']])
+            ->filter(fn (array $a): bool => ! empty($a['user_id']))
+            ->mapWithKeys(fn (array $a): array => [(int) $a['user_id'] => ['role' => $a['role'] ?? 'developer']])
             ->all();
 
         $record->assignedUsers()->sync($sync);
 
-        if (!empty($sync)) {
-            app(\App\Services\TaskIntegrationService::class)->notifyNewAssignees($record, array_keys($sync));
+        if (! empty($sync)) {
+            app(TaskIntegrationService::class)->notifyNewAssignees($record, array_keys($sync));
         }
 
         $startAt = static::parseScheduleStart($schedule);
-        $endAt   = static::parseScheduleEnd($schedule);
+        $endAt = static::parseScheduleEnd($schedule);
         if (null !== $startAt || null !== $endAt) {
             $record->update(array_filter([
                 'start_at' => $startAt,
@@ -218,7 +219,7 @@ class TasksTable
      */
     private static function parseScheduleEnd(array|string|null $schedule): ?Carbon
     {
-        if (null === $schedule || !is_array($schedule)) {
+        if (null === $schedule || ! is_array($schedule)) {
             return null;
         }
 

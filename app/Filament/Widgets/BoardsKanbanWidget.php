@@ -64,14 +64,14 @@ class BoardsKanbanWidget extends Widget implements HasForms
     {
         $record = $this->getEloquentQuery()->find($recordId);
 
-        if (!$record instanceof Model) {
+        if (! $record instanceof Model) {
             return;
         }
 
         $panelId = Filament::getCurrentPanel()?->getId();
-        if ($panelId === 'admin') {
+        if ('admin' === $panelId) {
             $data = $this->normalizeEditModalData($data);
-        } elseif ($panelId === 'developer') {
+        } elseif ('developer' === $panelId) {
             $data = array_intersect_key($data, array_flip(['completed', 'board_id']));
         } else {
             $data = array_intersect_key($data, array_flip(['completed']));
@@ -83,7 +83,7 @@ class BoardsKanbanWidget extends Widget implements HasForms
     /**
      * Normalize edit modal form data for persistence (checklist repeater → array of strings).
      *
-     * @param  array<string, mixed>  $data
+     * @param  array<string, mixed> $data
      * @return array<string, mixed>
      */
     /**
@@ -91,11 +91,11 @@ class BoardsKanbanWidget extends Widget implements HasForms
      */
     protected function syncEditModalProgress(Set $set): void
     {
-        $checklist      = $this->editModalFormState['checklist'] ?? [];
-        $completed      = $this->editModalFormState['completed'] ?? [];
-        $total          = is_array($checklist) ? count($checklist) : 0;
+        $checklist = $this->editModalFormState['checklist'] ?? [];
+        $completed = $this->editModalFormState['completed'] ?? [];
+        $total = is_array($checklist) ? count($checklist) : 0;
         $completedCount = is_array($completed) ? count($completed) : 0;
-        $progress       = $total > 0 ? (int) round(($completedCount / $total) * 100) : 0;
+        $progress = $total > 0 ? (int) round(($completedCount / $total) * 100) : 0;
         $set('progress', $progress);
     }
 
@@ -106,14 +106,14 @@ class BoardsKanbanWidget extends Widget implements HasForms
         if (isset($data['checklist']) && is_array($data['checklist'])) {
             $items = [];
             foreach ($data['checklist'] as $row) {
-                if (is_array($row) && !empty($row['item'] ?? null)) {
+                if (is_array($row) && ! empty($row['item'] ?? null)) {
                     $items[] = (string) $row['item'];
-                } elseif (is_string($row) && trim($row) !== '') {
+                } elseif (is_string($row) && '' !== trim($row)) {
                     $items[] = trim($row);
                 }
             }
             $data['checklist'] = array_values($items);
-            $completed         = $data['completed'] ?? [];
+            $completed = $data['completed'] ?? [];
             if (is_array($completed)) {
                 $data['completed'] = array_values(array_intersect($completed, $data['checklist']));
             }
@@ -124,12 +124,12 @@ class BoardsKanbanWidget extends Widget implements HasForms
 
     protected function getEditModalFormSchema(null|int|string $recordId): array
     {
-        $task             = $recordId ? $this->getEloquentQuery()->find($recordId) : null;
-        $checklist        = $task?->checklist ?? [];
-        $checklistOptions = is_array($checklist) && !empty($checklist)
+        $task = $recordId ? $this->getEloquentQuery()->find($recordId) : null;
+        $checklist = $task?->checklist ?? [];
+        $checklistOptions = is_array($checklist) && ! empty($checklist)
             ? (array_is_list($checklist) ? array_combine($checklist, $checklist) : $checklist)
             : [];
-        $isAdmin          = 'admin' === Filament::getCurrentPanel()?->getId();
+        $isAdmin = 'admin' === Filament::getCurrentPanel()?->getId();
 
         $titleField = $isAdmin
             ? TextInput::make(static::$recordTitleAttribute)
@@ -171,7 +171,7 @@ class BoardsKanbanWidget extends Widget implements HasForms
         $schema[] = CheckboxList::make('completed')
             ->label('Completed items')
             ->options($checklistOptions)
-            ->visible(fn(): bool => !empty($checklistOptions))
+            ->visible(fn (): bool => ! empty($checklistOptions))
             ->live()
             ->afterStateUpdated(function (array $state, Set $set): void {
                 $this->syncEditModalProgress($set);
@@ -184,19 +184,19 @@ class BoardsKanbanWidget extends Widget implements HasForms
             ->disabled()
             ->fillTrack()
             ->live()
-            ->hint(fn(): string => $this->editModalFormState['progress'] . '%');
+            ->hint(fn (): string => $this->editModalFormState['progress'].'%');
 
         $schema[] = Placeholder::make('assigned_users')
             ->label('Assigned')
-            ->content(fn(): HtmlString => $this->getKanbanAssignedUsersPlaceholderHtml());
+            ->content(fn (): HtmlString => $this->getKanbanAssignedUsersPlaceholderHtml());
 
-        $panelId     = Filament::getCurrentPanel()?->getId();
-        $canMoveTask = $panelId === 'admin' || $panelId === 'developer';
+        $panelId = Filament::getCurrentPanel()?->getId();
+        $canMoveTask = 'admin' === $panelId || 'developer' === $panelId;
         if ($canMoveTask) {
             $project = $this->resolveProject();
             if ($project) {
-                $boardsQuery  = $project->boards()->orderBy('position');
-                $boardOptions = $panelId === 'admin'
+                $boardsQuery = $project->boards()->orderBy('position');
+                $boardOptions = 'admin' === $panelId
                     ? $boardsQuery->pluck('name', 'id')->all()
                     : $boardsQuery->get()->slice(0, -1)->pluck('name', 'id')->all();
 
@@ -215,18 +215,18 @@ class BoardsKanbanWidget extends Widget implements HasForms
     {
         $record = $this->getEloquentQuery()->find($recordId);
 
-        if (!$record instanceof Model) {
+        if (! $record instanceof Model) {
             return $data;
         }
 
-        $recordData             = $record->toArray();
+        $recordData = $record->toArray();
         $recordData['progress'] = $record->progress;
-        $checklist              = $record->checklist ?? [];
+        $checklist = $record->checklist ?? [];
 
-        if (is_array($checklist) && !empty($checklist)) {
+        if (is_array($checklist) && ! empty($checklist)) {
             $recordData['checklist'] = array_values(array_map(
-                fn(string $item): array => ['item' => $item],
-                array_filter($checklist, fn($item): bool => trim((string) $item) !== '')
+                fn (string $item): array => ['item' => $item],
+                array_filter($checklist, fn ($item): bool => '' !== trim((string) $item))
             ));
         } else {
             $recordData['checklist'] = [];
@@ -241,19 +241,19 @@ class BoardsKanbanWidget extends Widget implements HasForms
             ? $this->getEloquentQuery()->with('assignedUsers')->find($this->editModalRecordId)
             : null;
 
-        if (!$task || !$task->assignedUsers || $task->assignedUsers->isEmpty()) {
+        if (! $task || ! $task->assignedUsers || $task->assignedUsers->isEmpty()) {
             return new HtmlString('<p class="text-sm text-gray-500 dark:text-gray-400">No one assigned</p>');
         }
 
         $html = '<div class="flex flex-wrap gap-3">';
 
         foreach ($task->assignedUsers as $user) {
-            $avatarUrl  = method_exists($user, 'getFilamentAvatarUrl') ? $user->getFilamentAvatarUrl() : $user->avatar;
-            $name       = e($user->name);
-            $html      .= '<div class="flex items-center gap-2">';
-            $html      .= '<img src="' . e($avatarUrl) . '" alt="' . $name . '" class="fi-avatar fi-circular fi-size-sm rounded-full ring-2 ring-gray-200 dark:ring-gray-600" title="' . $name . '" />';
-            $html      .= '<span class="text-sm font-medium text-gray-700 dark:text-gray-200">' . $name . '</span>';
-            $html      .= '</div>';
+            $avatarUrl = method_exists($user, 'getFilamentAvatarUrl') ? $user->getFilamentAvatarUrl() : $user->avatar;
+            $name = e($user->name);
+            $html .= '<div class="flex items-center gap-2">';
+            $html .= '<img src="'.e($avatarUrl).'" alt="'.$name.'" class="fi-avatar fi-circular fi-size-sm rounded-full ring-2 ring-gray-200 dark:ring-gray-600" title="'.$name.'" />';
+            $html .= '<span class="text-sm font-medium text-gray-700 dark:text-gray-200">'.$name.'</span>';
+            $html .= '</div>';
         }
 
         $html .= '</div>';
@@ -291,7 +291,7 @@ class BoardsKanbanWidget extends Widget implements HasForms
     public function startAddingCard(int $boardId): void
     {
         $this->addingCardToBoardId = $boardId;
-        $this->newCardTitle        = '';
+        $this->newCardTitle = '';
         $this->resetValidation('newCardTitle');
         $this->dispatch('open-modal', id: 'kanban--add-task-modal');
     }
@@ -299,7 +299,7 @@ class BoardsKanbanWidget extends Widget implements HasForms
     public function cancelAddingCard(): void
     {
         $this->addingCardToBoardId = null;
-        $this->newCardTitle        = '';
+        $this->newCardTitle = '';
         $this->resetValidation('newCardTitle');
         $this->dispatch('close-modal', id: 'kanban--add-task-modal');
     }
@@ -314,7 +314,7 @@ class BoardsKanbanWidget extends Widget implements HasForms
     {
         $project = $this->resolveProject();
 
-        if (!$project || null === $this->addingCardToBoardId) {
+        if (! $project || null === $this->addingCardToBoardId) {
             return;
         }
 
@@ -324,7 +324,7 @@ class BoardsKanbanWidget extends Widget implements HasForms
 
         $boardExists = $project->boards()->whereKey($this->addingCardToBoardId)->exists();
 
-        if (!$boardExists) {
+        if (! $boardExists) {
             $this->cancelAddingCard();
 
             return;
@@ -359,7 +359,7 @@ class BoardsKanbanWidget extends Widget implements HasForms
             return;
         }
 
-        $newOrder                                                = $orderedBoardIds;
+        $newOrder = $orderedBoardIds;
         [$newOrder[$currentIndex - 1], $newOrder[$currentIndex]] = [$newOrder[$currentIndex], $newOrder[$currentIndex - 1]];
 
         $this->moveBoard($boardId, $currentIndex - 1, $newOrder);
@@ -376,7 +376,7 @@ class BoardsKanbanWidget extends Widget implements HasForms
             return;
         }
 
-        $newOrder                                                = $orderedBoardIds;
+        $newOrder = $orderedBoardIds;
         [$newOrder[$currentIndex], $newOrder[$currentIndex + 1]] = [$newOrder[$currentIndex + 1], $newOrder[$currentIndex]];
 
         $this->moveBoard($boardId, $currentIndex + 1, $newOrder);
@@ -386,13 +386,13 @@ class BoardsKanbanWidget extends Widget implements HasForms
     {
         $project = $this->resolveProject();
 
-        if (!$project) {
+        if (! $project) {
             return;
         }
 
         $board = $project->boards()->whereKey($boardId)->first();
 
-        if (!$board instanceof Board) {
+        if (! $board instanceof Board) {
             return;
         }
 
@@ -403,7 +403,7 @@ class BoardsKanbanWidget extends Widget implements HasForms
 
         $taskCount = Task::query()->where('board_id', $boardId)->count();
 
-        if ($taskCount > 0 && !$otherBoard) {
+        if ($taskCount > 0 && ! $otherBoard) {
             return;
         }
 
@@ -423,13 +423,13 @@ class BoardsKanbanWidget extends Widget implements HasForms
     {
         $project = $this->resolveProject();
 
-        if (!$project) {
+        if (! $project) {
             return;
         }
 
         $boardExists = $project->boards()->whereKey($boardId)->exists();
 
-        if (!$boardExists) {
+        if (! $boardExists) {
             return;
         }
 
@@ -440,7 +440,7 @@ class BoardsKanbanWidget extends Widget implements HasForms
     {
         $project = $this->resolveProject();
 
-        if (!$project) {
+        if (! $project) {
             return;
         }
 
@@ -470,15 +470,15 @@ class BoardsKanbanWidget extends Widget implements HasForms
         ]);
 
         $this->resetValidation('newBoardName');
-        $this->newBoardName    = '';
+        $this->newBoardName = '';
         $this->showAddListForm = false;
         $this->dispatch('kanban-boards-updated');
     }
 
     public function toggleAddListForm(): void
     {
-        $this->showAddListForm = !$this->showAddListForm;
-        if (!$this->showAddListForm) {
+        $this->showAddListForm = ! $this->showAddListForm;
+        if (! $this->showAddListForm) {
             $this->newBoardName = '';
             $this->resetValidation('newBoardName');
         }
@@ -488,12 +488,12 @@ class BoardsKanbanWidget extends Widget implements HasForms
     {
         $project = $this->resolveProject();
 
-        if (!$project) {
+        if (! $project) {
             return;
         }
 
-        $normalizedTaskId      = (int) $taskId;
-        $normalizedBoardId     = (int) $targetBoardId;
+        $normalizedTaskId = (int) $taskId;
+        $normalizedBoardId = (int) $targetBoardId;
         $normalizedTargetIndex = max(0, $targetIndex);
 
         $task = Task::query()
@@ -501,19 +501,19 @@ class BoardsKanbanWidget extends Widget implements HasForms
             ->where('project_id', $project->id)
             ->first();
 
-        if (!$task) {
+        if (! $task) {
             return;
         }
 
         $targetBoardExists = $project->boards()->whereKey($normalizedBoardId)->exists();
 
-        if (!$targetBoardExists) {
+        if (! $targetBoardExists) {
             return;
         }
 
         $sourceBoardId = (int) $task->board_id;
 
-        DB::transaction(function () use ($project, $task, $normalizedTaskId, $normalizedBoardId, $normalizedTargetIndex, $sourceBoardId): void {
+        DB::transaction(function () use ($project, $normalizedTaskId, $normalizedBoardId, $normalizedTargetIndex, $sourceBoardId): void {
             $destinationTaskIds = Task::query()
                 ->where('project_id', $project->id)
                 ->where('board_id', $normalizedBoardId)
@@ -521,7 +521,7 @@ class BoardsKanbanWidget extends Widget implements HasForms
                 ->orderBy('position')
                 ->orderBy('id')
                 ->pluck('id')
-                ->map(fn(int|string $id): int => (int) $id)
+                ->map(fn (int|string $id): int => (int) $id)
                 ->all();
 
             $clampedTargetIndex = min($normalizedTargetIndex, count($destinationTaskIds));
@@ -538,7 +538,7 @@ class BoardsKanbanWidget extends Widget implements HasForms
                     ->orderBy('position')
                     ->orderBy('id')
                     ->pluck('id')
-                    ->map(fn(int|string $id): int => (int) $id)
+                    ->map(fn (int|string $id): int => (int) $id)
                     ->all();
 
                 $this->resequenceBoardTasks($sourceBoardId, $sourceTaskIds);
@@ -554,13 +554,13 @@ class BoardsKanbanWidget extends Widget implements HasForms
      */
     protected function getViewData(): array
     {
-        $project  = $this->resolveProject();
-        $records  = $this->records();
+        $project = $this->resolveProject();
+        $records = $this->records();
         $statuses = $this->statuses()
             ->values()
             ->map(function (array $status, int $index) use ($records): array {
                 $status['records'] = $this->filterRecordsByStatus($records, $status);
-                $status['index']   = $index;
+                $status['index'] = $index;
 
                 return $status;
             });
@@ -568,7 +568,7 @@ class BoardsKanbanWidget extends Widget implements HasForms
         $orderedBoardIds = $statuses->pluck('id')->values()->all();
 
         return match (true) {
-            !$project => [
+            ! $project => [
                 'project'         => null,
                 'statuses'        => collect(),
                 'orderedBoardIds' => [],
@@ -585,14 +585,14 @@ class BoardsKanbanWidget extends Widget implements HasForms
     {
         $project = $this->resolveProject();
 
-        if (!$project) {
+        if (! $project) {
             return collect();
         }
 
         return $project->boards()
             ->orderBy('position')
             ->get()
-            ->map(fn(Board $board): array => [
+            ->map(fn (Board $board): array => [
                 'id'    => $board->id,
                 'title' => $board->name,
             ]);
@@ -601,7 +601,7 @@ class BoardsKanbanWidget extends Widget implements HasForms
     protected function records(): SupportCollection
     {
         return $this->getEloquentQuery()
-            ->when(method_exists(static::$model, 'scopeOrdered'), fn($query) => $query->ordered())
+            ->when(method_exists(static::$model, 'scopeOrdered'), fn ($query) => $query->ordered())
             ->get();
     }
 
@@ -619,7 +619,7 @@ class BoardsKanbanWidget extends Widget implements HasForms
         $project = $this->resolveProject();
 
         return Task::query()
-            ->when($project, fn(Builder $query): Builder => $query->where('project_id', $project->id))
+            ->when($project, fn (Builder $query): Builder => $query->where('project_id', $project->id))
             ->with('assignedUsers')
             ->orderBy('position')
             ->orderBy('id');
@@ -636,9 +636,9 @@ class BoardsKanbanWidget extends Widget implements HasForms
         $projectQuery = Project::query()->with('boards');
 
         return match (true) {
-            $tenant instanceof Project => $projectQuery->whereKey($tenant)->first(),
+            $tenant instanceof Project   => $projectQuery->whereKey($tenant)->first(),
             $tenant instanceof Workspace => $projectQuery->whereBelongsTo($tenant)->latest('id')->first(),
-            default => null,
+            default                      => null,
         };
     }
 
@@ -664,16 +664,16 @@ class BoardsKanbanWidget extends Widget implements HasForms
     {
         $existingBoardIds = $project->boards()
             ->pluck('id')
-            ->map(fn(int|string $id): int => (int) $id)
+            ->map(fn (int|string $id): int => (int) $id)
             ->all();
 
         $normalizedOrderedBoardIds = collect($orderedBoardIds)
-            ->map(fn(int|string $id): int => (int) $id)
-            ->filter(fn(int $id): bool => in_array($id, $existingBoardIds, true))
+            ->map(fn (int|string $id): int => (int) $id)
+            ->filter(fn (int $id): bool => in_array($id, $existingBoardIds, true))
             ->values();
 
         $missingBoardIds = collect($existingBoardIds)
-            ->reject(fn(int $id): bool => $normalizedOrderedBoardIds->contains($id));
+            ->reject(fn (int $id): bool => $normalizedOrderedBoardIds->contains($id));
 
         $finalOrdering = $normalizedOrderedBoardIds->concat($missingBoardIds)->values();
 
@@ -683,5 +683,4 @@ class BoardsKanbanWidget extends Widget implements HasForms
                 ->update(['position' => $position]);
         }
     }
-
 }

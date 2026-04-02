@@ -70,6 +70,7 @@ class ProjectCommentController extends Controller
 
         return parent::beforeSave($request, $entity);
     }
+
     public function aggregates(): array
     {
         return ['author'];

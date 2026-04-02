@@ -6,7 +6,6 @@ use App\Models\User;
 use CodeWithKyrian\FilamentDateRange\Tables\Filters\DateRangeFilter;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
-use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\ColumnManagerLayout;
 use Filament\Tables\Filters\SelectFilter;
@@ -34,13 +33,13 @@ class TasksTable
                 TextColumn::make('priority')
                     ->searchable()
                     ->badge()
-                    ->color(fn(string $state): string => match ($state) {
-                        'low' => 'gray',
+                    ->color(fn (string $state): string => match ($state) {
+                        'low'    => 'gray',
                         'medium' => 'warning',
-                        'high' => 'danger',
+                        'high'   => 'danger',
                     }),
                 TextColumn::make('due_at')
-                ->label('Due date')
+                    ->label('Due date')
                     ->dateTime()
                     ->sortable(),
                 TextColumn::make('start_at')
@@ -65,7 +64,7 @@ class TasksTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->columnManagerLayout(ColumnManagerLayout::Modal)
-            ->columnManagerTriggerAction(fn($action) => $action->slideOver())
+            ->columnManagerTriggerAction(fn ($action) => $action->slideOver())
             ->filters([
                 SelectFilter::make('priority')
                     ->options([

@@ -9,6 +9,7 @@ use App\Models\Project;
 use Laravel\Ai\Contracts\Agent;
 use Laravel\Ai\Contracts\Conversational;
 use Laravel\Ai\Contracts\HasTools;
+use Laravel\Ai\Contracts\Tool;
 use Laravel\Ai\Messages\Message;
 use Laravel\Ai\Promptable;
 use Stringable;
@@ -38,7 +39,7 @@ class DevelopmentPlanAgent implements Agent, Conversational, HasTools
     }
 
     /**
-     * @return \Laravel\Ai\Contracts\Tool[]
+     * @return Tool[]
      */
     public function tools(): iterable
     {

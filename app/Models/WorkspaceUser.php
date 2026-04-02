@@ -3,13 +3,14 @@
 namespace App\Models;
 
 use App\Traits\BelongsToWorkspace;
+use Database\Factories\WorkspaceUserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class WorkspaceUser extends Model
 {
-    /** @use HasFactory<\Database\Factories\WorkspaceUserFactory> */
+    /** @use HasFactory<WorkspaceUserFactory> */
     use BelongsToWorkspace;
 
     use HasFactory;

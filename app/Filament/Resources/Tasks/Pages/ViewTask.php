@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Tasks\Pages;
 use App\Filament\Resources\Tasks\TaskResource;
 use App\Models\User;
 use Filament\Resources\Pages\ViewRecord;
+use Illuminate\Contracts\Support\Htmlable;
 use Kirschbaum\Commentions\Filament\Actions\CommentsAction;
 use Kirschbaum\Commentions\Filament\Actions\SubscriptionAction;
 
@@ -22,7 +23,7 @@ class ViewTask extends ViewRecord
         ];
     }
 
-    public function getTitle(): string|\Illuminate\Contracts\Support\Htmlable
+    public function getTitle(): string|Htmlable
     {
         return $this->record->title;
     }

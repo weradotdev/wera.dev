@@ -4,7 +4,9 @@ namespace App\Http\Scramble;
 
 use Dedoc\Scramble\Extensions\OperationExtension;
 use Dedoc\Scramble\Support\Generator\Operation;
+use Dedoc\Scramble\Support\Generator\Reference;
 use Dedoc\Scramble\Support\Generator\RequestBodyObject;
+use Dedoc\Scramble\Support\Generator\Response;
 use Dedoc\Scramble\Support\Generator\Schema;
 use Dedoc\Scramble\Support\Generator\Types\ArrayType;
 use Dedoc\Scramble\Support\Generator\Types\ObjectType as GeneratorObjectType;
@@ -227,10 +229,10 @@ class OrionResponseOperationExtension extends OperationExtension
 
     private function getResponseCode(mixed $response): ?int
     {
-        if ($response instanceof \Dedoc\Scramble\Support\Generator\Response) {
+        if ($response instanceof Response) {
             return $response->code;
         }
-        if ($response instanceof \Dedoc\Scramble\Support\Generator\Reference) {
+        if ($response instanceof Reference) {
             try {
                 return $response->resolve()->code ?? null;
             } catch (\Throwable) {

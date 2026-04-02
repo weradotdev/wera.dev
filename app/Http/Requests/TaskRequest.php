@@ -16,7 +16,7 @@ class TaskRequest extends Request
             'ticket_id'    => ['nullable', 'integer', 'exists:tickets,id'],
             'title'        => ['required', 'string', 'max:255'],
             'description'  => ['nullable', 'string'],
-            'priority'      => ['nullable', 'string', 'max:255'],
+            'priority'     => ['nullable', 'string', 'max:255'],
             'checklist'    => ['nullable', 'array'],
             'completed'    => ['nullable', 'array'],
             'event_period' => ['nullable', 'array'],
