@@ -23,15 +23,17 @@ WORKDIR /var/www/html
 
 RUN mkdir -p /var/www/html/storage /var/www/html/bootstrap/cache
 
-RUN chown -R unit:unit /var/www/html/storage bootstrap/cache && chmod -R 775 /var/www/html/storage
+RUN chown -R unit:unit /var/www/html/storage /var/www/html/bootstrap/cache
+RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-COPY . .
+COPY --chown=unit:unit . .
 
 RUN composer install --prefer-dist --optimize-autoloader --no-interaction
 
 RUN bun install && bun run build && rm -rf /var/www/html/.bun /var/www/html/node_modules
 
-RUN chown -R unit:unit storage bootstrap/cache && chmod -R 775 storage bootstrap/cache
+RUN chown -R unit:unit /var/www/html/storage /var/www/html/bootstrap/cache
+RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
 COPY unit.json /docker-entrypoint.d/unit.json
 
