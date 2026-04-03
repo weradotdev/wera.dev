@@ -1,6 +1,7 @@
 <?php
 
 use App\Events\WhatsAppConnectionUpdate;
+use App\Http\Controllers\AssistantController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BoardController;
 use App\Http\Controllers\NotificationController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\StatsController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\TaskUserController;
+use App\Http\Controllers\TelegramWebhookController;
 use App\Http\Controllers\WorkspaceController;
 use App\Services\WhatsAppCommandHandler;
 use Illuminate\Http\Request;
@@ -59,6 +61,14 @@ Route::domain(env('API_DOMAIN', 'api.wera.dev'))
 
                     Route::apiResource('notifications', NotificationController::class);
 
+                    Route::prefix('projects/{project}/assistant')
+                        ->controller(AssistantController::class)
+                        ->group(function () {
+                            Route::get('conversations/latest', 'latest')->name('projects.assistant.conversations.latest');
+                            Route::post('messages', 'store')->name('projects.assistant.messages.store');
+                            Route::post('actions/{actionRequest}/confirm', 'confirmAction')->name('projects.assistant.actions.confirm');
+                        });
+
                     Route::get('stats/{type}', [StatsController::class, 'make'])->name('make');
 
                     Orion::resource('workspaces', WorkspaceController::class);
@@ -103,4 +113,6 @@ Route::domain(env('API_DOMAIN', 'api.wera.dev'))
 
             return response()->json(['ok' => true]);
         })->name('whatsapp.callback');
+
+        Route::post('/telegram-incoming', TelegramWebhookController::class)->name('telegram.incoming');
     });

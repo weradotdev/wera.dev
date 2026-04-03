@@ -14,7 +14,6 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Resources\Pages\ViewRecord;
 use Illuminate\Contracts\Support\Htmlable;
-use Illuminate\Database\Eloquent\Builder;
 
 class ViewTask extends ViewRecord
 {
@@ -38,8 +37,7 @@ class ViewTask extends ViewRecord
                             Select::make('user_id')
                                 ->label('User')
                                 ->options(
-                                    User::query()
-                                        ->whereHas('workspaces', fn (Builder $q) => $q->where('workspaces.id', $record->workspace_id))
+                                    User::whereRelation('workspaces', 'id', $record->workspace_id)
                                         ->orderBy('name')
                                         ->pluck('name', 'id')
                                 )

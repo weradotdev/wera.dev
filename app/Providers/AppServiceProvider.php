@@ -8,8 +8,12 @@ use App\Events\DevelopmentPlanGenerated;
 use App\Events\GenerateDevelopmentPlanRequested;
 use App\Events\GenerateProgressReportRequested;
 use App\Events\ProgressReportGenerated;
+use App\Events\TaskAssigned;
+use App\Events\TaskCompleted;
 use App\Filament\Widgets\AddTaskKanbanForm;
 use App\Http\Scramble\OrionResponseOperationExtension;
+use App\Listeners\NotifyAssigneeOnTaskAssigned;
+use App\Listeners\NotifyProjectMembersOnTaskCompleted;
 use App\Listeners\PromptDevelopmentPlanAgent;
 use App\Listeners\PromptProgressReportAgent;
 use App\Listeners\ShareProgressReportWithProjectUsers;
@@ -50,6 +54,8 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(DevelopmentPlanGenerated::class, StoreDevelopmentPlanRevision::class);
         Event::listen(GenerateProgressReportRequested::class, PromptProgressReportAgent::class);
         Event::listen(ProgressReportGenerated::class, ShareProgressReportWithProjectUsers::class);
+        Event::listen(TaskCompleted::class, NotifyProjectMembersOnTaskCompleted::class);
+        Event::listen(TaskAssigned::class, NotifyAssigneeOnTaskAssigned::class);
 
         Blade::anonymousComponentPath(
             resource_path('views/filament/widgets/kanban/components'),

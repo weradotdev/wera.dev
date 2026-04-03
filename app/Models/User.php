@@ -111,6 +111,11 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
         return $this->hasMany(ProjectUser::class);
     }
 
+    public function projectConversations(): HasMany
+    {
+        return $this->hasMany(ProjectConversation::class);
+    }
+
     public function hostedMeetings(): HasMany
     {
         return $this->hasMany(Meeting::class, 'user_id');

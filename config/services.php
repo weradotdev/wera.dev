@@ -54,4 +54,8 @@ return [
         'default_session_id' => env('WHATSAPP_DEFAULT_SESSION_ID'),
     ],
 
+    'telegram' => [
+        'webhook_secret' => env('TELEGRAM_WEBHOOK_SECRET'),
+    ],
+
 ];

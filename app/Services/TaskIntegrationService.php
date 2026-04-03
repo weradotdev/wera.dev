@@ -99,6 +99,21 @@ class TaskIntegrationService
     }
 
     /**
+     * Broadcast a freeform message to all members of a project via configured channels.
+     */
+    public function broadcastToProjectMembers(Project $project, string $message): void
+    {
+        $channels = $project->settings['notifications']['channels'] ?? [];
+        if (empty($channels)) {
+            return;
+        }
+
+        foreach ($project->users as $user) {
+            $this->notifyUserViaChannels($project, $user, $message, $channels);
+        }
+    }
+
+    /**
      * Notify via project-configured channels. Channel targets (chat_id, phone, channel, etc.)
      * can be passed in $channelTargets; otherwise falls back to project settings or user data.
      *

@@ -15,7 +15,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 use Kirschbaum\Commentions\Comment;
 use Kirschbaum\Commentions\Contracts\Commentable;
 use Kirschbaum\Commentions\HasComments;
@@ -222,6 +221,11 @@ class Project extends Model implements Commentable, HasAvatar, HasMedia, HasName
     public function meetings(): HasMany
     {
         return $this->hasMany(Meeting::class);
+    }
+
+    public function projectConversations(): HasMany
+    {
+        return $this->hasMany(ProjectConversation::class);
     }
 
     public function projectUsers(): HasMany

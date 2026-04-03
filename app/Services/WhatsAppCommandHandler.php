@@ -3,12 +3,16 @@
 namespace App\Services;
 
 use App\Models\Project;
-use App\Models\Task;
+use App\Models\ProjectConversation;
 use App\Models\User;
-use Carbon\Carbon;
+use App\Services\Assistant\ProjectAssistantOrchestrator;
 
 class WhatsAppCommandHandler
 {
+    public function __construct(
+        protected ProjectAssistantOrchestrator $assistant,
+    ) {}
+
     /**
      * Handle an incoming WhatsApp message and return a reply.
      * Only called for messages starting with "wera" (case-insensitive).
@@ -19,11 +23,6 @@ class WhatsAppCommandHandler
         $message = trim($message);
         $rest = preg_replace('/^wera\s*/i', '', $message);
         $rest = trim($rest);
-        $lower = '' === $rest ? '' : strtolower($rest);
-
-        if ('' === $rest || in_array($lower, ['help', 'commands', '?'], true)) {
-            return $this->help();
-        }
 
         $project = $this->resolveProject($sessionId);
         $user = $this->resolveUser($from);
@@ -32,19 +31,32 @@ class WhatsAppCommandHandler
             return "Unknown project. Session: {$sessionId}. Say *wera* for commands.";
         }
 
-        if (str_contains($lower, 'task') && (str_contains($lower, 'how many') || str_contains($lower, 'many') || 'tasks' === $lower || 'my tasks' === $lower)) {
-            return $this->myTasksCount($project, $user);
+        if (null === $user) {
+            $lower = '' === $rest ? '' : strtolower($rest);
+
+            if ('' === $rest || in_array($lower, ['help', 'commands', '?'], true)) {
+                return $this->help();
+            }
+
+            return 'I can’t find your account for this number. Add this phone in your profile to use the assistant in WhatsApp. Say *wera* for commands.';
         }
 
-        if (str_contains($lower, 'overdue')) {
-            return $this->overdueCount($project, $user);
-        }
+        $conversation = ProjectConversation::query()
+            ->where('project_id', $project->id)
+            ->where('user_id', $user->id)
+            ->where('channel', 'whatsapp')
+            ->latest('updated_at')
+            ->first();
 
-        if (str_contains($lower, 'project') || str_contains($lower, 'going') || str_contains($lower, 'status')) {
-            return $this->projectStatus($project, $user, $rest);
-        }
+        $result = $this->assistant->respond(
+            project: $project,
+            user: $user,
+            message: '' === $rest ? 'help' : $rest,
+            projectConversation: $conversation,
+            channel: 'whatsapp',
+        );
 
-        return "I didn't understand. Say *wera* to see what I can do.";
+        return $result['reply']->content;
     }
 
     public function help(): string
@@ -80,67 +92,5 @@ TEXT;
         return User::query()
             ->whereRaw("REPLACE(REPLACE(REPLACE(COALESCE(phone, ''), ' ', ''), '+', ''), '-', '') = ?", [$phone])
             ->first();
-    }
-
-    protected function myTasksCount(Project $project, ?User $user): string
-    {
-        if (null === $user) {
-            return 'I can’t find your account for this number. Add this phone in your profile to see your tasks. Say *wera* for commands.';
-        }
-
-        $count = Task::query()
-            ->where('project_id', $project->id)
-            ->whereHas('assignedUsers', fn ($q) => $q->where('users.id', $user->id))
-            ->count();
-
-        return "You have *{$count}* task(s) in *{$project->name}*.";
-    }
-
-    protected function overdueCount(Project $project, ?User $user): string
-    {
-        if (null === $user) {
-            return 'Add this phone in your profile to see your overdue tasks. Say *wera* for commands.';
-        }
-
-        $count = Task::query()
-            ->where('project_id', $project->id)
-            ->whereHas('assignedUsers', fn ($q) => $q->where('users.id', $user->id))
-            ->whereNotNull('end_at')
-            ->where('end_at', '<', Carbon::now())
-            ->count();
-
-        return "You have *{$count}* overdue task(s) in *{$project->name}*.";
-    }
-
-    protected function projectStatus(Project $project, ?User $user, string $message): string
-    {
-        if (null !== $user && ! $user->projects()->whereKey($project->id)->exists()) {
-            return 'You don’t have access to this project.';
-        }
-
-        $total = Task::query()->where('project_id', $project->id)->count();
-        $overdue = Task::query()
-            ->where('project_id', $project->id)
-            ->whereNotNull('end_at')
-            ->where('end_at', '<', Carbon::now())
-            ->count();
-        $assignedToUser = $user
-            ? Task::query()
-                ->where('project_id', $project->id)
-                ->whereHas('assignedUsers', fn ($q) => $q->where('users.id', $user->id))
-                ->count()
-            : 0;
-
-        $lines = [
-            "*{$project->name}*",
-            "Status: {$project->status}",
-            "Total tasks: {$total}",
-            "Overdue: {$overdue}",
-        ];
-        if (null !== $user) {
-            $lines[] = "Your tasks: {$assignedToUser}";
-        }
-
-        return implode("\n", $lines);
     }
 }

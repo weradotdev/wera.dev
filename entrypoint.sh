@@ -21,4 +21,4 @@ php artisan db:seed --force
 
 echo "Done."
 
-exec "$@"
+exec /usr/bin/supervisord -n -c /etc/supervisord.conf

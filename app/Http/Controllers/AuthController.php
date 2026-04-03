@@ -9,9 +9,9 @@ use App\Models\User;
 use Dedoc\Scramble\Attributes\Group;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
@@ -143,7 +143,7 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'Avatar updated successfully.',
-            'user' => new UserResource($user->fresh()),
+            'user'    => new UserResource($user->fresh()),
         ], 200);
     }
 

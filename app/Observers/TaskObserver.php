@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Events\TaskCompleted;
 use App\Models\Task;
 use App\Services\TaskIntegrationService;
 
@@ -23,7 +24,14 @@ class TaskObserver
 
     public function updated(Task $task): void
     {
-        //
+        // Fire TaskCompleted event when the task's board changes to "Completed" / "Done".
+        if ($task->wasChanged('board_id')) {
+            $task->load('board');
+            $boardName = $task->board?->name ?? '';
+            if (in_array($boardName, ['Completed', 'Done'], true)) {
+                TaskCompleted::dispatch($task);
+            }
+        }
     }
 
     public function deleted(Task $task): void
