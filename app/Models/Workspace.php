@@ -85,10 +85,6 @@ class Workspace extends Model implements HasAvatar
 
     public function getFilamentAvatarUrl(): ?string
     {
-        if (blank($this->icon)) {
-            return null;
-        }
-
         return $this->icon_url;
     }
 

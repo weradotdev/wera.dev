@@ -4,7 +4,6 @@ FROM unit:1.34.1-php8.4
 
 RUN apt update && apt install -y \
     curl wget unzip git libicu-dev libzip-dev libpng-dev libjpeg-dev libfreetype6-dev libssl-dev libpq-dev \
-    supervisor \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) pcntl opcache pdo pdo_mysql pdo_pgsql intl zip gd exif ftp bcmath \
     && pecl install redis \
@@ -37,10 +36,12 @@ RUN chown -R unit:unit /var/www/html/storage /var/www/html/bootstrap/cache
 RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
 COPY unit.json /docker-entrypoint.d/unit.json
-COPY supervisord.conf /etc/supervisord.conf
 
 RUN chmod +x /var/www/html/entrypoint.sh
 
 EXPOSE 80 8080
+
+HEALTHCHECK --interval=15s --timeout=5s --retries=3 --start-period=30s \
+  CMD curl -f http://localhost/up || exit 1
 
 CMD ["/var/www/html/entrypoint.sh"]

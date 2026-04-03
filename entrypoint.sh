@@ -6,19 +6,24 @@ echo "Fixing storage and cache permissions..."
 chown -R unit:unit /var/www/html/storage /var/www/html/bootstrap/cache
 chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-echo "Storage directories:"
-ls -la /var/www/html/storage
-ls -la /var/www/html/bootstrap/cache
-
-php artisan optimize:clear
-
 # Link storage and public folders
 php artisan storage:link || true
 
-php artisan migrate --force
+if [ "${RUN_MIGRATIONS:-true}" = "true" ]; then
+    echo "Waiting for database..."
+    until php artisan db:monitor --max=1 > /dev/null 2>&1; do
+        sleep 2
+    done
+    echo "Database is ready."
 
-php artisan db:seed --force
+    php artisan migrate --force
+    php artisan db:seed --force || true
+fi
+
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
 
 echo "Done."
 
-exec /usr/bin/supervisord -n -c /etc/supervisord.conf
+exec unitd --no-daemon

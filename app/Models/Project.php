@@ -120,10 +120,6 @@ class Project extends Model implements Commentable, HasAvatar, HasMedia, HasName
 
     public function getFilamentAvatarUrl(): ?string
     {
-        if (blank($this->icon)) {
-            return null;
-        }
-
         return $this->icon_url;
     }
 
