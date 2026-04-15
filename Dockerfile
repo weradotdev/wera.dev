@@ -37,11 +37,8 @@ RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
 COPY unit.json /docker-entrypoint.d/unit.json
 
-RUN chmod +x /var/www/html/entrypoint.sh
+EXPOSE 80
 
-EXPOSE 80 8080
+CMD ["unitd", "--no-daemon"]
 
-HEALTHCHECK --interval=15s --timeout=5s --retries=3 --start-period=30s \
-  CMD curl -f http://localhost/up || exit 1
-
-CMD ["/var/www/html/entrypoint.sh"]
+# ENTRYPOINT ["/entrypoint.sh"]

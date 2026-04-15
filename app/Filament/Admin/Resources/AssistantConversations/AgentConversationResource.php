@@ -23,6 +23,8 @@ class AgentConversationResource extends Resource
 
     protected static ?int $navigationSort = 20;
 
+    protected static bool $isScopedToTenant = false;
+
     public static function table(Table $table): Table
     {
         return $table
