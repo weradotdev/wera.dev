@@ -17,10 +17,12 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->trustProxies(at: '*');
+
         $middleware->validateCsrfTokens(except: [
             'embed/*',
             'livewire/messages/embed',
         ]);
+        
         $middleware->web(replace: [
             ValidateCsrfToken::class => CustomValidateCsrfToken::class,
         ]);
