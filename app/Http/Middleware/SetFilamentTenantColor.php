@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class SetFilamentTenantColor
 {
-    private const string DefaultPrimary = '#0097b2';
+    private string $defaultPrimary = '#0097b2';
 
     public function handle(Request $request, Closure $next): Response
     {
@@ -19,7 +19,7 @@ class SetFilamentTenantColor
 
         $hex = $tenant && filled($tenant->color ?? null)
             ? $tenant->color
-            : self::DefaultPrimary;
+            : self::$defaultPrimary;
 
         FilamentColor::register([
             'primary' => Color::hex($hex),
