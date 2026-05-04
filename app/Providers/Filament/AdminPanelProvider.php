@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Admin\Pages\Auth\Register;
 use App\Filament\Admin\Pages\Tenancy\EditTenantProfile;
 use App\Filament\Admin\Pages\Tenancy\RegisterTenant;
 use App\Filament\Admin\Resources\Workspaces\WorkspaceResource;
@@ -52,7 +53,7 @@ class AdminPanelProvider extends PanelProvider
                     ->icon('heroicon-m-cog-8-tooth'),
             ])
             ->login()
-            ->registration()
+            ->registration(Register::class)
             ->profile(isSimple: false)
             ->passwordReset()
             ->databaseNotifications()
@@ -62,7 +63,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->font('IBM Plex Mono')
             ->topbar(false)
-            ->sidebarWidth('12rem')
+            ->sidebarWidth('14rem')
             ->brandLogoHeight('2rem')
             ->brandLogo(asset('logo.png'))
             ->favicon(asset('favicon.png'))

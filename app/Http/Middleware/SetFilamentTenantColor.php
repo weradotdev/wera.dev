@@ -19,7 +19,7 @@ class SetFilamentTenantColor
 
         $hex = $tenant && filled($tenant->color ?? null)
             ? $tenant->color
-            : self::$defaultPrimary;
+            : $this->defaultPrimary;
 
         FilamentColor::register([
             'primary' => Color::hex($hex),
